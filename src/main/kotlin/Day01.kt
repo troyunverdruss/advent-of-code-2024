@@ -1,15 +1,13 @@
 package net.unverdruss
 
 import java.io.File
+import kotlin.math.abs
 
 class Day01 {
     fun part1(): Long {
         val (list1, list2) = loadAndSortLists()
 
-        return list1.mapIndexed { index, value1 ->
-            val value2 = list2[index]
-            Math.abs(value1 - value2)
-        }.sum()
+        return list1.zip(list2) { a, b -> abs(a - b) }.sum()
     }
 
     fun part2(): Long {
