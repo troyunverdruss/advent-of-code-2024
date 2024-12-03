@@ -14,7 +14,7 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useTestNG()
 }
 kotlin {
     jvmToolchain(21)
