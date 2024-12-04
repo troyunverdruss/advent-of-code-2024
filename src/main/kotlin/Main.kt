@@ -20,5 +20,5 @@ fun main() {
     val d3r1 = d3.part1()
     println("Part 1, sum of all valid mul(): $d3r1")
     val d3r2 = d3.part2()
-    println("Part 2, ??: $d3r2")
+    println("Part 2, sum of all enabled and valid mul(): $d3r2")
 }
