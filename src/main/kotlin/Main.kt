@@ -21,4 +21,11 @@ fun main() {
     println("Part 1, sum of all valid mul(): $d3r1")
     val d3r2 = d3.part2()
     println("Part 2, sum of all enabled and valid mul(): $d3r2")
+
+    println("Day 4")
+    val d4 = Day04()
+    val d4r1 = d4.part1()
+    println("Part 1, total XMASes: $d4r1")
+    val d4r2 = d4.part2()
+    println("Part 2, total X-MASes: $d4r2")
 }
