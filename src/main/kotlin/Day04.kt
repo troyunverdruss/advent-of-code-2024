@@ -10,7 +10,13 @@ class Day04 {
         return starts.map { findXmasCount(it, grid) }.sum()
     }
 
-     fun findXmasCount(pos: Point, grid: Map<Point, Char>): Long {
+    fun part2(): Long {
+        val grid = readGrid()
+        val starts = grid.filter { it.value == 'A' }.map { it.key }
+        return starts.map { findCrossingMasCount(it, grid) }.sum()
+    }
+
+    fun findXmasCount(pos: Point, grid: Map<Point, Char>): Long {
         val dirs = listOf(
             Point(1, 0), // forward
             Point(-1, 0), // backward
@@ -40,6 +46,29 @@ class Day04 {
 
     }
 
+    fun findCrossingMasCount(pos: Point, grid: Map<Point, Char>): Long {
+        val diagDown = listOf(
+            Point(-1, -1), // up, backward
+            Point(0, 0),
+            Point(1, 1), // down, forward
+        )
+        val diagUp = listOf(
+            Point(-1, 1), // down, backward
+            Point(0, 0),
+            Point(1, -1), // up, forward
+        )
+
+        val crossOne = diagDown.map { d -> grid[Point(pos.x + (d.x), pos.y + (d.y))] }
+            .joinToString("")
+        val crossTwo = diagUp.map { d -> grid[Point(pos.x + (d.x), pos.y + (d.y))] }
+            .joinToString("")
+
+        return if ((crossOne == "MAS" || crossOne == "SAM") && (crossTwo == "MAS" || crossTwo == "SAM")) {
+            1
+        } else {
+            0
+        }
+    }
 
 
     data class Point(val x: Long, val y: Long)
@@ -52,9 +81,5 @@ class Day04 {
                     Pair(Point(x.toLong(), y.toLong()), c)
                 }
             }.toMap()
-    }
-
-    fun part2(): Long {
-        TODO("Not yet implemented")
     }
 }

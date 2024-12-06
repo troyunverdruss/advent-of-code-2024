@@ -77,4 +77,34 @@ class Day04Test {
             3,
         )
     }
+
+    @Test
+    fun `part2 example`() {
+        val grid = """
+            MMMSXXMASM
+            MSAMXMSMSA
+            AMXSXMAAMM
+            MSAMASMSMX
+            XMASAMXAMM
+            XXAMMXXAMA
+            SMSMSASXSS
+            SAXAMASAAA
+            MAMMMXMMMM
+            MXMXAXMASX
+        """.trimIndent()
+            .lines()
+            .flatMapIndexed { y: Int, line: String ->
+                line.mapIndexed { x: Int, c: Char ->
+                    Pair(Day04.Point(x.toLong(), y.toLong()), c)
+                }
+            }.toMap()
+
+        val starts = grid.filter { it.value == 'A' }.map { it.key }
+        val d = Day04()
+        assertEquals(
+            starts.map { d.findCrossingMasCount(it, grid) }.sum(),
+            9,
+        )
+    }
+
 }
