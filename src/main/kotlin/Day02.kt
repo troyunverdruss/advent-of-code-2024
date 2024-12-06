@@ -6,7 +6,6 @@ import kotlin.math.abs
 class Day02 {
     fun part1(): Long {
         val reports = loadReports()
-        println("reports = ${reports}")
         return reports.count { isReportSafePart1(it) }.toLong()
     }
 

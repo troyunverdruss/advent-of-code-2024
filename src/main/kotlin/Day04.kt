@@ -29,19 +29,9 @@ class Day04 {
         )
 
         return dirs.map { d ->
-            val s = (0..3).map { step ->
-                try {
-                    grid[Point(pos.x + (d.x * step), pos.y + (d.y * step))]
-                } catch (e: Exception) {
-                    // probably out of bounds
-                }
+            (0..3).map { step ->
+                grid[Point(pos.x + (d.x * step), pos.y + (d.y * step))]
             }.joinToString("")
-            if (s == "XMAS") {
-                println("$pos, $d")
-                count += 1
-                println(count)
-            }
-            s
         }.count { it -> it == "XMAS" }.toLong()
 
     }

@@ -28,4 +28,11 @@ fun main() {
     println("Part 1, total XMASes: $d4r1")
     val d4r2 = d4.part2()
     println("Part 2, total X-MASes: $d4r2")
+
+    println("Day 5")
+    val d5 = Day05()
+    val d5r1 = d5.part1()
+    println("Part 1, sum of valid updates: $d5r1")
+    val d5r2 = d5.part2()
+    println("Part 2, ???: $d5r2")
 }
