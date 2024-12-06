@@ -34,5 +34,5 @@ fun main() {
     val d5r1 = d5.part1()
     println("Part 1, sum of valid updates: $d5r1")
     val d5r2 = d5.part2()
-    println("Part 2, ???: $d5r2")
+    println("Part 2, sum of newly valid updates: $d5r2")
 }

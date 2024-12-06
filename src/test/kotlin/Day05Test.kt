@@ -2,11 +2,10 @@ import net.unverdruss.Day04
 import net.unverdruss.Day05
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class Day05Test {
-    @Test
-    fun `part1 example`() {
-        val lines = """
+    private val lines = """
             47|53
             97|13
             97|61
@@ -36,10 +35,31 @@ class Day05Test {
             61,13,29
             97,13,75,29,47
         """.trimIndent()
-            .lines()
+        .lines()
+
+    @Test
+    fun `part1 example`() {
         val d = Day05()
         val input = d.parseInputString(lines)
         val result = d.computePart1(input)
         assertEquals(143, result)
+    }
+
+    @Test
+    fun `part2 example`() {
+        val d = Day05()
+        val input = d.parseInputString(lines)
+        val result = d.computePart2(input)
+        assertEquals(123, result)
+    }
+
+    @Test
+    fun `test building a global order`() {
+        val d = Day05()
+        val input = d.parseInputString(lines)
+        val lookup = d.createRulesLookup(input)
+        val possibleOrder = d.buildGlobalOrder(lookup, input)
+        println(possibleOrder)
+        assertTrue(d.isValid(lookup, possibleOrder))
     }
 }

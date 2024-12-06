@@ -9,6 +9,81 @@ class Day05 {
     }
 
     fun computePart1(input: ParseResult): Long {
+        val rulesLookup = createRulesLookup(input)
+
+        return input.updates
+            .filter { isValid(rulesLookup, it) }
+            .sumOf { it[it.size / 2] }
+    }
+
+    fun part2(): Long {
+        val input = readInput()
+        return computePart2(input)
+    }
+
+    fun computePart2(input: ParseResult): Long {
+        val rulesLookup = createRulesLookup(input)
+        val globalOrder = buildGlobalOrder(rulesLookup, input)
+        println(globalOrder)
+        println(isValid(rulesLookup, globalOrder))
+
+        return input.updates
+            .filter { !isValid(rulesLookup, it) }
+            .map { correctInvalidUpdate(rulesLookup, globalOrder, it) }
+            .sumOf { it[it.size / 2] }
+    }
+
+    fun buildGlobalOrder(rulesLookup: MutableMap<Long, MutableList<Rule>>, input: ParseResult): List<Long> {
+        val allNums = input.rules.flatMap { listOf(it.first, it.second) }.distinct().sorted()
+        val globalOrder = mutableListOf<Long>()
+        allNums.forEach { v ->
+            for (testIndex in 0..globalOrder.size) {
+                val testList = globalOrder.toMutableList()
+                testList.add(testIndex, v)
+                if (isValid(rulesLookup, testList)) {
+                    globalOrder.add(testIndex, v)
+                    break
+                }
+            }
+        }
+        return globalOrder.distinct()
+    }
+
+    private fun correctInvalidUpdate(
+        rulesLookup: MutableMap<Long, MutableList<Rule>>,
+        globalOrder: List<Long>,
+        update: List<Long>
+    ): List<Long> {
+//        // Really gross but theoretically works
+//        val mutableUpdate = update.toMutableList()
+//        while (!isValid(rulesLookup, mutableUpdate)) {
+//            mutableUpdate.shuffle()
+//        }
+//        return mutableUpdate
+
+//        println("in: $update")
+//        val valid = globalOrder.filter { update.contains(it) }
+//        println("valid: $valid")
+//        return valid
+
+
+        val properOrder = mutableListOf<Long>()
+
+        update.forEach { v ->
+            for (testIndex in 0..globalOrder.size) {
+                val testList = properOrder.toMutableList()
+                testList.add(testIndex, v)
+                if (isValid(rulesLookup, testList)) {
+                    properOrder.add(testIndex, v)
+                    break
+                }
+            }
+        }
+        return properOrder
+
+    }
+
+    fun createRulesLookup(input: ParseResult): MutableMap<Long, MutableList<Rule>> {
         val rulesLookup = mutableMapOf<Long, MutableList<Rule>>()
         input.rules.forEach {
             val lookupList1 = rulesLookup[it.first] ?: mutableListOf()
@@ -19,15 +94,9 @@ class Day05 {
             lookupList2.add(it)
             rulesLookup[it.second] = lookupList2
         }
-
-        return input.updates
-            .filter { isValid(rulesLookup, it) }
-            .sumOf { it[it.size / 2] }
+        return rulesLookup
     }
 
-    fun part2(): Long {
-        TODO("Not yet implemented")
-    }
 
     data class Rule(val first: Long, val second: Long)
     data class ParseResult(val rules: List<Rule>, val updates: List<List<Long>>)
@@ -37,7 +106,7 @@ class Day05 {
         update.forEachIndexed { index, v ->
             val relevantRules = rulesLookup[v] ?: listOf()
             val numbersRequiredToBeBefore = relevantRules.filter { it.second == v }.map { it.first }
-            val endOfList = update.slice(index+1..update.lastIndex)
+            val endOfList = update.slice(index + 1..update.lastIndex)
             numbersRequiredToBeBefore.forEach {
                 if (endOfList.contains(it)) {
                     valid = false
