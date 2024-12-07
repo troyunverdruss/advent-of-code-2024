@@ -1,17 +1,18 @@
 package net.unverdruss
 
+import jdk.jshell.spi.ExecutionControl
 import java.io.File
 
 class Day04 {
     var count = 0
     fun part1(): Long {
-        val grid = readGrid()
+        val grid = readGrid("inputs/day04.txt")
         val starts = grid.filter { it.value == 'X' }.map { it.key }
         return starts.map { findXmasCount(it, grid) }.sum()
     }
 
     fun part2(): Long {
-        val grid = readGrid()
+        val grid = readGrid("inputs/day04.txt")
         val starts = grid.filter { it.value == 'A' }.map { it.key }
         return starts.map { findCrossingMasCount(it, grid) }.sum()
     }
@@ -36,21 +37,43 @@ class Day04 {
 
     }
 
+    enum class Direction(val point: Point) {
+        UP_LEFT(Point(-1, -1)),
+        NONE(Point(0, 0)),
+        DOWN_RIGHT(Point(1, 1)),
+        DOWN_LEFT(Point(-1, 1)),
+        UP_RIGHT(Point(1, -1)),
+        UP(Point(0, -1)),
+        DOWN(Point(0, 1)),
+        LEFT(Point(-1, 0)),
+        RIGHT(Point(1, 0));
+
+        fun turnRight90(direction: Direction): Direction {
+            when (direction) {
+                UP -> RIGHT
+                DOWN -> LEFT
+                LEFT -> UP
+                RIGHT -> DOWN
+                else -> throw RuntimeException("Unknown direction $direction")
+            }
+        }
+    }
+
     fun findCrossingMasCount(pos: Point, grid: Map<Point, Char>): Long {
         val diagDown = listOf(
-            Point(-1, -1), // up, backward
-            Point(0, 0),
-            Point(1, 1), // down, forward
+            Direction.UP_LEFT,
+            Direction.NONE,
+            Direction.DOWN_RIGHT,
         )
         val diagUp = listOf(
-            Point(-1, 1), // down, backward
-            Point(0, 0),
-            Point(1, -1), // up, forward
+            Direction.DOWN_LEFT,
+            Direction.NONE,
+            Direction.UP_RIGHT, // up, forward
         )
 
-        val crossOne = diagDown.map { d -> grid[Point(pos.x + (d.x), pos.y + (d.y))] }
+        val crossOne = diagDown.map { d -> grid[Point(pos.x + (d.point.x), pos.y + (d.point.y))] }
             .joinToString("")
-        val crossTwo = diagUp.map { d -> grid[Point(pos.x + (d.x), pos.y + (d.y))] }
+        val crossTwo = diagUp.map { d -> grid[Point(pos.x + (d.point.x), pos.y + (d.point.y))] }
             .joinToString("")
 
         return if ((crossOne == "MAS" || crossOne == "SAM") && (crossTwo == "MAS" || crossTwo == "SAM")) {
@@ -63,13 +86,16 @@ class Day04 {
 
     data class Point(val x: Long, val y: Long)
 
-    private fun readGrid(): Map<Point, Char> {
-        return File("inputs/day04.txt").readLines()
-            .filter { it.isNotBlank() }
-            .flatMapIndexed { y: Int, line: String ->
-                line.mapIndexed { x: Int, c: Char ->
-                    Pair(Point(x.toLong(), y.toLong()), c)
-                }
-            }.toMap()
+    companion object {
+
+        fun readGrid(filePath: String): Map<Point, Char> {
+            return File(filePath).readLines()
+                .filter { it.isNotBlank() }
+                .flatMapIndexed { y: Int, line: String ->
+                    line.mapIndexed { x: Int, c: Char ->
+                        Pair(Point(x.toLong(), y.toLong()), c)
+                    }
+                }.toMap()
+        }
     }
 }
