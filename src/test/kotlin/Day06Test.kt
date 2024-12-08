@@ -4,9 +4,8 @@ import org.testng.annotations.Test
 import kotlin.test.assertEquals
 
 class Day06Test {
-    @Test
-    fun `part 1 example`() {
-        val lines = """
+
+    private val lines = """
             ....#.....
             .........#
             ..........
@@ -18,11 +17,22 @@ class Day06Test {
             #.........
             ......#...
         """.trimIndent()
-            .lines()
+        .lines()
+
+    @Test
+    fun `part 1 example`() {
+
         val grid = Day04.parseGrid(lines)
         val d = Day06()
 
-        assertEquals(41, d.runSimulation(grid))
+        assertEquals(41, d.countVisitedSquares(grid))
+    }
 
+    @Test
+    fun `part 2 example`() {
+        val grid = Day04.parseGrid(lines)
+        val d = Day06()
+
+        assertEquals(6, d.computePart2(grid))
     }
 }
