@@ -48,13 +48,16 @@ class Day04 {
         LEFT(Point(-1, 0)),
         RIGHT(Point(1, 0));
 
-        fun turnRight90(direction: Direction): Direction {
-            when (direction) {
-                UP -> RIGHT
-                DOWN -> LEFT
-                LEFT -> UP
-                RIGHT -> DOWN
-                else -> throw RuntimeException("Unknown direction $direction")
+        companion object {
+
+            fun turnRight90(direction: Direction): Direction {
+                return when (direction) {
+                    UP -> RIGHT
+                    DOWN -> LEFT
+                    LEFT -> UP
+                    RIGHT -> DOWN
+                    else -> throw RuntimeException("Unknown direction $direction")
+                }
             }
         }
     }
@@ -84,13 +87,21 @@ class Day04 {
     }
 
 
-    data class Point(val x: Long, val y: Long)
+    data class Point(val x: Long, val y: Long) {
+        operator fun plus(p: Point): Point {
+            return Point(this.x + p.x, this.y + p.y)
+        }
+
+    }
 
     companion object {
 
         fun readGrid(filePath: String): Map<Point, Char> {
-            return File(filePath).readLines()
-                .filter { it.isNotBlank() }
+            return parseGrid(File(filePath).readLines())
+        }
+
+        fun parseGrid(lines: List<String>): Map<Point, Char> {
+            return lines.filter { it.isNotBlank() }
                 .flatMapIndexed { y: Int, line: String ->
                     line.mapIndexed { x: Int, c: Char ->
                         Pair(Point(x.toLong(), y.toLong()), c)

@@ -1,7 +1,5 @@
 package net.unverdruss
 
-import net.unverdruss.net.unverdruss.Day06
-
 fun main() {
     println("Day 1")
     val d1 = Day01()
@@ -41,8 +39,7 @@ fun main() {
     println("Day 6")
     val d6 = Day06()
     val d6r1 = d6.part1()
-    println("Part 1, sum of valid updates: $d6r1")
+    println("Part 1, all visited squares: $d6r1")
     val d6r2 = d6.part2()
-    println("Part 2, sum of newly valid updates: $d6r2")
-
+    println("Part 2, total number of possible obstruction locations: $d6r2")
 }
