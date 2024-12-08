@@ -1,15 +1,17 @@
 import java.io.File
 
 class Day07 {
+
     fun part1(): Long {
         val equations = readInput()
 
-        //sum of the test values from just the equations that could possibly be true
         return equations.filter { couldBeTrue(it) }.sumOf { it.testValue }
     }
 
     fun part2(): Long {
-        TODO()
+        val equations = readInput()
+
+        return equations.filter { couldBeTrueWithConcat(it) }.sumOf { it.testValue }
     }
 
     data class CalibrationEquation(val testValue: Long, val equationValues: List<Long>) {
@@ -45,6 +47,36 @@ class Day07 {
         val prodResult = couldBeTrue(CalibrationEquation(eq.testValue, tmp))
         return prodResult
     }
+
+    fun couldBeTrueWithConcat(eq: CalibrationEquation): Boolean {
+        if (eq.equationValues.size == 2) {
+            val summed = eq.equationValues.sum()
+            val product = eq.equationValues.reduce { acc, v -> acc * v }
+            val concat = "${eq.equationValues[0]}${eq.equationValues[1]}".toLong()
+            return summed == eq.testValue || product == eq.testValue || concat == eq.testValue
+        }
+
+        val tmp = eq.equationValues.toMutableList()
+        val a = tmp.removeFirst()
+        val b = tmp.removeFirst()
+        tmp.addFirst(a+b)
+        // sum
+        val sumResult = couldBeTrueWithConcat(CalibrationEquation(eq.testValue, tmp))
+        if (sumResult) {
+            return true
+        }
+        tmp.removeFirst()
+        tmp.addFirst(a*b)
+        val prodResult = couldBeTrueWithConcat(CalibrationEquation(eq.testValue, tmp))
+        if (prodResult) {
+            return true
+        }
+        tmp.removeFirst()
+        tmp.addFirst("$a$b".toLong())
+        val concatResult = couldBeTrueWithConcat(CalibrationEquation(eq.testValue, tmp))
+        return concatResult
+    }
+
 
     fun readInput(): List<CalibrationEquation> {
         val lines = File("inputs/day07.txt")

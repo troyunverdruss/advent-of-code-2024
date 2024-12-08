@@ -48,7 +48,7 @@ fun main() {
     println("Day 7")
     val d7 = Day07()
     val d7r1 = d7.part1()
-    println("Part 1, total calibration result: $d7r1")
+    println("Part 1, total calibration result (+ *): $d7r1")
     val d7r2 = d7.part2()
-    println("Part 2, ??: $d7r2")
+    println("Part 2, total calibration result (+ * ||): $d7r2")
 }

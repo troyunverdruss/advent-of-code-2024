@@ -24,4 +24,14 @@ class Day07Test {
             equations.filter { d.couldBeTrue(it) }.sumOf { it.testValue }
         )
     }
+
+    @Test
+    fun `part2 example`() {
+        val d = Day07()
+        val equations = d.parseInput(lines)
+        assertEquals(
+            11387,
+            equations.filter { d.couldBeTrueWithConcat(it) }.sumOf { it.testValue }
+        )
+    }
 }
