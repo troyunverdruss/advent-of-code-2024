@@ -1,5 +1,7 @@
 package net.unverdruss
 
+import Day07
+
 fun main() {
     println("Day 1")
     val d1 = Day01()
@@ -42,4 +44,11 @@ fun main() {
     println("Part 1, all visited squares: $d6r1")
     val d6r2 = d6.part2()
     println("Part 2, total number of possible obstruction locations: $d6r2")
+
+    println("Day 7")
+    val d7 = Day07()
+    val d7r1 = d7.part1()
+    println("Part 1, total calibration result: $d7r1")
+    val d7r2 = d7.part2()
+    println("Part 2, ??: $d7r2")
 }
