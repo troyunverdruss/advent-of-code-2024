@@ -2,11 +2,10 @@ class Day08 {
     fun part1(): Long {
         val grid = Day04.readGrid("inputs/day08.txt")
         return computePart1(grid)
-
     }
 
-     fun computePart1(grid: Map<Day04.Point, Char>): Long {
-        val frequencies = grid.values.distinct().filter { it != '.'}
+    fun computePart1(grid: Map<Day04.Point, Char>): Long {
+        val frequencies = grid.values.distinct().filter { it != '.' }
         val antiNodeLocations = mutableSetOf<Day04.Point>()
         frequencies.forEach { frequency ->
             val freqLocs = grid.filter { it.value == frequency }.map { it.key }
@@ -19,17 +18,43 @@ class Day08 {
                     b + invertPoint(slope),
                 )
                 possibleAntiNodes
-                    .filter { it != a  }
+                    .filter { it != a }
                     .filter { it != b }
-                    .filter { grid[it] != null}
-                    .forEach { antiNodeLocations.add(it)}
+                    .filter { grid[it] != null }
+                    .forEach { antiNodeLocations.add(it) }
             }
         }
         return antiNodeLocations.size.toLong()
     }
 
     fun part2(): Long {
-        TODO("Not yet implemented")
+        val grid = Day04.readGrid("inputs/day08.txt")
+        return computePart2(grid)
+    }
+
+    fun computePart2(grid: Map<Day04.Point, Char>): Long {
+        val frequencies = grid.values.distinct().filter { it != '.' }
+        val antiNodeLocations = mutableSetOf<Day04.Point>()
+        frequencies.forEach { frequency ->
+            val freqLocs = grid.filter { it.value == frequency }.map { it.key }
+            combinations(freqLocs).forEach { (a, b) ->
+                val slope = slope(a, b)
+                val invertedSlope = invertPoint(slope)
+                antiNodeLocations.add(a)
+                var testPoint = a
+                while (grid[testPoint + slope] != null) {
+                    antiNodeLocations.add(testPoint + slope)
+                    testPoint += slope
+
+                }
+                testPoint = a
+                while (grid[testPoint + invertedSlope] != null) {
+                    antiNodeLocations.add(testPoint + invertedSlope)
+                    testPoint += invertedSlope
+                }
+            }
+        }
+        return antiNodeLocations.size.toLong()
     }
 
     fun <T> combinations(list: List<T>): Sequence<Pair<T, T>> {
