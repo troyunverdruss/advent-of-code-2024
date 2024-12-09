@@ -1,6 +1,3 @@
-package net.unverdruss
-
-import jdk.jshell.spi.ExecutionControl
 import java.io.File
 
 class Day04 {

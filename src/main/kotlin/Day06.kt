@@ -1,5 +1,7 @@
 package net.unverdruss
 
+import Day04
+
 class Day06 {
     fun part1(): Long {
         val grid = Day04.readGrid("inputs/day06.txt")

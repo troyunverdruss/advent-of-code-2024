@@ -1,4 +1,3 @@
-import net.unverdruss.Day04
 import org.testng.Assert.assertEquals
 import org.testng.annotations.Test
 

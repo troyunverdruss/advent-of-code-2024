@@ -1,6 +1,9 @@
 package net.unverdruss
 
+import Day01
+import Day04
 import Day07
+import Day08
 
 fun main() {
     println("Day 1")
@@ -51,4 +54,11 @@ fun main() {
     println("Part 1, total calibration result (+ *): $d7r1")
     val d7r2 = d7.part2()
     println("Part 2, total calibration result (+ * ||): $d7r2")
+
+    println("Day 8")
+    val d8 = Day08()
+    val d8r1 = d8.part1()
+    println("Part 1, distinct antinode locations: $d8r1")
+    val d8r2 = d8.part2()
+    println("Part 2, total calibration result (+ * ||): $d8r2")
 }

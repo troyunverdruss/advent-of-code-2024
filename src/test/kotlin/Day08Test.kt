@@ -1,0 +1,36 @@
+import org.testng.annotations.Test
+import kotlin.test.assertEquals
+
+class Day08Test {
+    @Test
+    fun `test my combinations method`() {
+        val list = listOf(1, 2, 3)
+        val d = Day08()
+        assertEquals(
+            listOf(Pair(1, 2), Pair(1, 3), Pair(2, 3)),
+            d.combinations(list).toList()
+        )
+    }
+
+    @Test
+    fun `part 1 example`() {
+        val lines = """
+            ............
+            ........0...
+            .....0......
+            .......0....
+            ....0.......
+            ......A.....
+            ............
+            ............
+            ........A...
+            .........A..
+            ............
+            ............
+        """.trimIndent()
+            .lines()
+        val grid = Day04.parseGrid(lines)
+        val d = Day08()
+        assertEquals(14, d.computePart1(grid))
+    }
+}

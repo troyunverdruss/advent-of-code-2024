@@ -1,5 +1,3 @@
-package net.unverdruss
-
 import java.io.File
 import kotlin.math.abs
 

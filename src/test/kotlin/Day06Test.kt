@@ -1,4 +1,3 @@
-import net.unverdruss.Day04
 import net.unverdruss.Day06
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
