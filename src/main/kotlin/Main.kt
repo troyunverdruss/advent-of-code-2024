@@ -4,6 +4,7 @@ import Day01
 import Day04
 import Day07
 import Day08
+import Day09
 
 fun main() {
     println("Day 1")
@@ -61,4 +62,12 @@ fun main() {
     println("Part 1, distinct antinode locations: $d8r1")
     val d8r2 = d8.part2()
     println("Part 2, distinct antinode locations (with resonant harmonics): $d8r2")
+
+    println("Day 9")
+    val d9 = Day09()
+    val d9r1 = d9.part1()
+    println("Part 1, checksum of defragged drive (fragging files): $d9r1")
+    val d9r2 = d9.part2()
+    println("Part 2, checksum of defragged drive (keeping files intact): $d9r2")
+    
 }
