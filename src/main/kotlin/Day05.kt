@@ -24,8 +24,6 @@ class Day05 {
     fun computePart2(input: ParseResult): Long {
         val rulesLookup = createRulesLookup(input)
         val globalOrder = buildGlobalOrder(rulesLookup, input)
-        println(globalOrder)
-        println(isValid(rulesLookup, globalOrder))
 
         return input.updates
             .filter { !isValid(rulesLookup, it) }
