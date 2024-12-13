@@ -93,5 +93,5 @@ fun main() {
     val d12r1 = d12.part1()
     println("Part 1, cost of fence: $d12r1")
     val d12r2 = d12.part2()
-    println("Part 2, ???: $d12r2")
+    println("Part 2, cost of fence: $d12r2")
 }
