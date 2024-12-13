@@ -7,6 +7,7 @@ import Day08
 import Day09
 import Day10
 import Day11
+import Day12
 
 fun main() {
 //    println("Day 1")
@@ -78,12 +79,19 @@ fun main() {
 //    println("Part 1, sum of trailhead scores: $d10r1")
 //    val d10r2 = d10.part2()
 //    println("Part 2, sum of trailhead ratings: $d10r2")
+//
+//    println("Day 11")
+//    val d11 = Day11()
+//    val d11r1 = d11.part1()
+//    println("Part 1, stones after 25 blinks: $d11r1")
+//    val d11r2 = d11.part2()
+//    println("Part 2, stones after 75 blinks: $d11r2")
 
-    println("Day 11")
-    val d11 = Day11()
-    val d11r1 = d11.part1()
-    println("Part 1, stones after 25 blinks: $d11r1")
-    val d11r2 = d11.part2()
-    println("Part 2, ??: $d11r2")
 
+    println("Day 12")
+    val d12 = Day12()
+    val d12r1 = d12.part1()
+    println("Part 1, cost of fence: $d12r1")
+    val d12r2 = d12.part2()
+    println("Part 2, ???: $d12r2")
 }
