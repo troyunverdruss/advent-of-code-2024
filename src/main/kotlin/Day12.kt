@@ -14,14 +14,31 @@ class Day12 : Day {
             area * perimeter
         }.sum()
     }
+    fun debugPrint(region: Set<Pair<Day04.Point, Char>>, area: Int, sides: Long){
+        val map = region.toMap()
+        val minX = region.minBy { it.first.x }.first.x
+        val minY = region.minBy { it.first.y }.first.y
+        val maxX = region.maxBy { it.first.x }.first.x
+        val maxY = region.maxBy { it.first.y }.first.y
+        (minX..maxX).forEach { x ->
+            (minY..maxY).forEach { y ->
+                print(map[Day04.Point(x,y)] ?: '.')
+            }
+            println()
+        }
+        println("Area: $area")
+        println("Sides: $sides")
+    }
 
     fun computePart2(grid: Map<Day04.Point, Char>): Long {
         val regions = findRegions(grid)
-        return regions.sumOf { region ->
+        val costs = regions.map { region ->
             val area = region.size
-            val perimeter = computeNumberOfSides(grid, region)
-            area * perimeter
+            val sides = computeNumberOfSides(grid, region)
+            debugPrint(region, area, sides)
+            area * sides
         }
+        return costs.sum()
     }
 
     private fun computePerimeter(grid: Map<Day04.Point, Char>, region: Set<Pair<Day04.Point, Char>>): Long {
@@ -96,24 +113,53 @@ class Day12 : Day {
         }
 
         val exteriorEdges = allEdges.filter { counts[it] == 1L }.toMutableSet()
+        val usedEdges = mutableSetOf<Edge>()
 
         val startingEdge = exteriorEdges.first()
-        val startingPoint = startingEdge.start
+        usedEdges.add(startingEdge)
 
+        var startingPoint = startingEdge.start
         var currentEdge = startingEdge
         var currentPoint = startingEdge.end
-        var edgeCount = 0L
-        while (currentPoint != startingPoint) {
-            val nextEdge = exteriorEdges.find { currentPoint == it.start || currentPoint == it.end && currentEdge != it} ?: throw RuntimeException("Couldn't find next edge")
-            if (currentEdge.slope() != nextEdge.slope()) {
-                edgeCount++
+//        exteriorEdges.remove(currentEdge)
+        var edgeCount = 1L
+//        println(currentEdge)
+        while (usedEdges.size != exteriorEdges.size) {
+            while (currentPoint != startingPoint) {
+                var nextEdge = exteriorEdges.find {
+                    (currentPoint == it.start || currentPoint == it.end) && !usedEdges.contains(it)
+                } ?: throw RuntimeException("Couldn't find next edge")
+                val possibleNextEdges = exteriorEdges.filter {
+                    (currentPoint == it.start || currentPoint == it.end) && !usedEdges.contains(it)
+                }
+                for (pe in possibleNextEdges) {
+                    if (pe.slope() != currentEdge.slope()) {
+                        nextEdge = pe
+                        break
+                    }
+                }
+//            exteriorEdges.remove(nextEdge)
+//                println(nextEdge)
+                if (currentEdge.slope() != nextEdge.slope()) {
+                    edgeCount++
+                }
+                usedEdges.add(nextEdge)
+                currentEdge = nextEdge
+                currentPoint = if (currentPoint == nextEdge.start) {
+                    nextEdge.end
+                } else {
+                    nextEdge.start
+                }
             }
-            currentEdge = nextEdge
-            currentPoint = if (currentPoint == nextEdge.start) {
-                nextEdge.end
-            } else {
-                nextEdge.start
+            if (exteriorEdges.minus(usedEdges).isEmpty()) {
+                break
             }
+            currentEdge = exteriorEdges.minus(usedEdges).first()
+            usedEdges.add(currentEdge)
+            startingPoint = currentEdge.start
+            currentPoint = currentEdge.end
+            edgeCount += 1
+
         }
 
         return edgeCount
@@ -242,7 +288,7 @@ class Day12 : Day {
     }
 
 
-    private fun findRegions(grid: Map<Day04.Point, Char>): List<Set<Pair<Day04.Point, Char>>> {
+     fun findRegions(grid: Map<Day04.Point, Char>): List<Set<Pair<Day04.Point, Char>>> {
         val used = mutableSetOf<Day04.Point>()
         return grid.entries.map { entry ->
             if (used.contains(entry.key)) {
