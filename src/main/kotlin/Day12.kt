@@ -60,6 +60,44 @@ class Day12 : Day {
     }
 
     fun computeNumberOfSides(grid: Map<Day04.Point, Char>, region: Set<Pair<Day04.Point, Char>>): Long {
+        var sideCount = 0L
+        val points = region.map { it.first }
+
+        points.forEach { p->
+            // xP
+            // PP
+            if (points.contains(p.up()) && points.contains(p.left()) && !points.contains(p.upLeft())) {
+                sideCount += 1
+            }
+            if (points.contains(p.up()) && points.contains(p.right()) && !points.contains(p.upRight())) {
+                sideCount += 1
+            }
+            if (points.contains(p.down()) && points.contains(p.left()) && !points.contains(p.downLeft())) {
+                sideCount += 1
+            }
+            if (points.contains(p.down()) && points.contains(p.right()) && !points.contains(p.downRight())) {
+                sideCount += 1
+            }
+            // ?x
+            // xP
+            if (!points.contains(p.up()) && !points.contains(p.left())) {
+                sideCount += 1
+            }
+            if (!points.contains(p.up()) && !points.contains(p.right())) {
+                sideCount += 1
+            }
+            if (!points.contains(p.down()) && !points.contains(p.left())) {
+                sideCount += 1
+            }
+            if (!points.contains(p.down()) && !points.contains(p.right())) {
+                sideCount += 1
+            }
+        }
+        return sideCount
+    }
+
+
+    fun computeNumberOfSidesBroken(grid: Map<Day04.Point, Char>, region: Set<Pair<Day04.Point, Char>>): Long {
         val allEdges = region.flatMap { entry ->
             directions.map { dir ->
                 when (dir) {
