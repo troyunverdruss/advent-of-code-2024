@@ -372,5 +372,13 @@ class Day12 : Day {
         return computePart2(grid)
     }
 
+    override fun part1ResultDescription(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun part2ResultDescription(): String {
+        TODO("Not yet implemented")
+    }
+
 
 }

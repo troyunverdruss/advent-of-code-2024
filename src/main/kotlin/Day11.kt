@@ -42,6 +42,14 @@ class Day11 : Day {
         return computePart2(input, blinks = 75)
     }
 
+    override fun part1ResultDescription(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun part2ResultDescription(): String {
+        TODO("Not yet implemented")
+    }
+
     private fun computePart2(input: List<Long>, blinks: Int = 25): Long {
         val lastMap = mutableMapOf<Long, Long>()
         input.forEach {

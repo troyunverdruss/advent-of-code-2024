@@ -8,6 +8,7 @@ import Day09
 import Day10
 import Day11
 import Day12
+import Day13
 
 fun main() {
 //    println("Day 1")
@@ -94,4 +95,11 @@ fun main() {
     println("Part 1, cost of fence: $d12r1")
     val d12r2 = d12.part2()
     println("Part 2, cost of fence: $d12r2")
+
+    println("Day 13")
+    val d13 = Day13()
+    val d13r1 = d13.part1()
+    println("Part 1, ${d13.part1ResultDescription()}: $d13r1")
+    val d13r2 = d13.part2()
+    println("Part 2, ${d13.part2ResultDescription()}: $d13r2")
 }
