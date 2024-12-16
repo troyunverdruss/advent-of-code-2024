@@ -88,6 +88,9 @@ class Day04 {
         operator fun plus(p: Point): Point {
             return Point(this.x + p.x, this.y + p.y)
         }
+        operator fun minus(p: Point): Point {
+            return Point(this.x - p.x, this.y - p.y)
+        }
         fun up(): Point {
             return this + Direction.UP.point
         }

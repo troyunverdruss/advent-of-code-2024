@@ -1,5 +1,6 @@
 import Day04.Point
 import java.io.File
+import kotlin.math.max
 
 class Day13 : Day {
     override fun part1(): Long {
@@ -8,39 +9,29 @@ class Day13 : Day {
         return computePart1(clawMachines)
     }
 
-     fun computePart1(clawMachines: List<ClawMachine>): Long {
-         return clawMachines.map { clawMachine ->
-            // y = mx
-//            val eq1 = (clawMachine.buttonA.y / clawMachine.buttonA.x) * x - (clawMachine.buttonB.y / clawMachine.buttonB.x) * x
-
-            // A button = 3 tokens
-            // B button = 1 token
-
-             if (clawMachine.buttonA.x % clawMachine.buttonB.x == 0L && clawMachine.buttonA.y % clawMachine.buttonB.y == 0L) {
-                 println("divisible")
-             }
-             if (clawMachine.buttonB.x % clawMachine.buttonA.x == 0L && clawMachine.buttonB.y % clawMachine.buttonA.y == 0L) {
-                 println("divisible")
-             }
-
-            var pos = clawMachine.prize
-            var tokens = 0L
-            while (pos.x > 0 && pos.y > 0) {
-                if (pos.x % clawMachine.buttonB.x == 0L && pos.y % clawMachine.buttonB.y == 0L) {
-                    tokens += pos.x / clawMachine.buttonB.x
-                    pos = Point(0, 0)
-                    break
-                }
-                pos = Point(pos.x - clawMachine.buttonA.x, pos.y - clawMachine.buttonA.y)
-                tokens += 3
-            }
-            if (pos == Point(0,0)) {
-                tokens
-            } else {
-                0
-            }
+    fun computePart1(clawMachines: List<ClawMachine>): Long {
+        return clawMachines.map { clawMachine ->
+            solveClawMachine(clawMachine)
         }.sum().toLong()
 //         return 0L
+    }
+
+    fun solveClawMachine(clawMachine: ClawMachine, tokens: Long = 0L): Long {
+        if (clawMachine.prize.x < 0 || clawMachine.prize.y < 0) {
+            return 0
+        }
+        if (clawMachine.prize.x == 0L && clawMachine.prize.y == 0L) {
+            return tokens
+        }
+        // Button A
+        val a = solveClawMachine(
+            ClawMachine(clawMachine.buttonA, clawMachine.buttonB, clawMachine.prize - clawMachine.buttonA), tokens + 3L
+        )
+        // Button B
+        val b = solveClawMachine(
+            ClawMachine(clawMachine.buttonA, clawMachine.buttonB, clawMachine.prize - clawMachine.buttonB), tokens + 1L
+        )
+        return max(a, b)
     }
 
     override fun part2(): Long {
@@ -62,7 +53,7 @@ class Day13 : Day {
 
     data class ClawMachine(val buttonA: Point, val buttonB: Point, val prize: Point)
 
-     fun parseClawMachine(lines: List<String>): ClawMachine {
+    fun parseClawMachine(lines: List<String>): ClawMachine {
         val a = lines[0].split(":")[1].split(",").map { it.split("+")[1].trim().toLong() }
         val b = lines[1].split(":")[1].split(",").map { it.split("+")[1].trim().toLong() }
         val p = lines[2].split(":")[1].split(",").map { it.split("=")[1].trim().toLong() }
