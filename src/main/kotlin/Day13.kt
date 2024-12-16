@@ -15,6 +15,14 @@ class Day13 : Day {
 
             // A button = 3 tokens
             // B button = 1 token
+
+             if (clawMachine.buttonA.x % clawMachine.buttonB.x == 0L && clawMachine.buttonA.y % clawMachine.buttonB.y == 0L) {
+                 println("divisible")
+             }
+             if (clawMachine.buttonB.x % clawMachine.buttonA.x == 0L && clawMachine.buttonB.y % clawMachine.buttonA.y == 0L) {
+                 println("divisible")
+             }
+
             var pos = clawMachine.prize
             var tokens = 0L
             while (pos.x > 0 && pos.y > 0) {
