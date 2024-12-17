@@ -17,21 +17,39 @@ class Day13 : Day {
     }
 
     fun solveClawMachine(clawMachine: ClawMachine, tokens: Long = 0L): Long {
-        if (clawMachine.prize.x < 0 || clawMachine.prize.y < 0) {
-            return 0
+        // y = mx
+//            val eq1 = (clawMachine.buttonA.y / clawMachine.buttonA.x) * x - (clawMachine.buttonB.y / clawMachine.buttonB.x) * x
+
+        // A button = 3 tokens
+        // B button = 1 token
+
+        var pos = clawMachine.prize
+        val solutions1 = mutableListOf<Long>()
+        var tokens = 0L
+        while (pos.x > 0 && pos.y > 0) {
+            if (pos.x % clawMachine.buttonB.x == 0L && pos.y % clawMachine.buttonB.y == 0L && pos.x / clawMachine.buttonB.x == pos.y / clawMachine.buttonB.y) {
+                solutions1.add(tokens + pos.x / clawMachine.buttonB.x)
+            }
+            pos = Point(pos.x - clawMachine.buttonA.x, pos.y - clawMachine.buttonA.y)
+            tokens += 3
         }
-        if (clawMachine.prize.x == 0L && clawMachine.prize.y == 0L) {
-            return tokens
+
+        tokens = 0L
+        pos = clawMachine.prize
+        val solutions2 = mutableListOf<Long>()
+        while (pos.x > 0 && pos.y > 0) {
+            if (pos.x % clawMachine.buttonA.x == 0L && pos.y % clawMachine.buttonA.y == 0L && pos.x / clawMachine.buttonA.x == pos.y / clawMachine.buttonA.y) {
+                solutions2.add(tokens + 3*(pos.x / clawMachine.buttonA.x))
+            }
+            pos = Point(pos.x - clawMachine.buttonB.x, pos.y - clawMachine.buttonB.y)
+            tokens += 1
         }
-        // Button A
-        val a = solveClawMachine(
-            ClawMachine(clawMachine.buttonA, clawMachine.buttonB, clawMachine.prize - clawMachine.buttonA), tokens + 3L
-        )
-        // Button B
-        val b = solveClawMachine(
-            ClawMachine(clawMachine.buttonA, clawMachine.buttonB, clawMachine.prize - clawMachine.buttonB), tokens + 1L
-        )
-        return max(a, b)
+
+        return if (solutions1.isNotEmpty() || solutions2.isNotEmpty()) {
+            listOf(solutions1.min(), solutions2.min()).min()
+        } else {
+            0
+        }
     }
 
     override fun part2(): Long {
