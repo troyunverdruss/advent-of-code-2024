@@ -9,6 +9,7 @@ import Day10
 import Day11
 import Day12
 import Day13
+import Day14
 
 fun main() {
 //    println("Day 1")
@@ -87,19 +88,26 @@ fun main() {
 //    println("Part 1, stones after 25 blinks: $d11r1")
 //    val d11r2 = d11.part2()
 //    println("Part 2, stones after 75 blinks: $d11r2")
+//
+//
+//    println("Day 12")
+//    val d12 = Day12()
+//    val d12r1 = d12.part1()
+//    println("Part 1, cost of fence: $d12r1")
+//    val d12r2 = d12.part2()
+//    println("Part 2, cost of fence: $d12r2")
+//
+//    println("Day 13")
+//    val d13 = Day13()
+//    val d13r1 = d13.part1()
+//    println("Part 1, ${d13.part1ResultDescription()}: $d13r1")
+//    val d13r2 = d13.part2()
+//    println("Part 2, ${d13.part2ResultDescription()}: $d13r2")
 
-
-    println("Day 12")
-    val d12 = Day12()
-    val d12r1 = d12.part1()
-    println("Part 1, cost of fence: $d12r1")
-    val d12r2 = d12.part2()
-    println("Part 2, cost of fence: $d12r2")
-
-    println("Day 13")
-    val d13 = Day13()
-    val d13r1 = d13.part1()
-    println("Part 1, ${d13.part1ResultDescription()}: $d13r1")
-    val d13r2 = d13.part2()
-    println("Part 2, ${d13.part2ResultDescription()}: $d13r2")
+    println("Day 14")
+    val d14 = Day14()
+    val d14r1 = d14.part1()
+    println("Part 1, ${d14.part1ResultDescription()}: $d14r1")
+    val d14r2 = d14.part2()
+    println("Part 2, ${d14.part2ResultDescription()}: $d14r2")
 }
