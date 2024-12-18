@@ -11,7 +11,17 @@ class Day13 : Day {
 
     fun computePart1(clawMachines: List<ClawMachine>): Long {
         return clawMachines.map { clawMachine ->
-            solveClawMachine(clawMachine)
+            solveClawMachineMath(clawMachine)
+        }.sum().toLong()
+//         return 0L
+    }
+
+    fun computePart2(clawMachines: List<ClawMachine>): Long {
+        val offset = 10000000000000L
+        val updatedClawMachines =
+            clawMachines.map { ClawMachine(it.buttonA, it.buttonB, Point(it.prize.x + offset, it.prize.y + offset)) }
+        return updatedClawMachines.map { clawMachine ->
+            solveClawMachineMath(clawMachine)
         }.sum().toLong()
 //         return 0L
     }
@@ -39,7 +49,7 @@ class Day13 : Day {
         val solutions2 = mutableListOf<Long>()
         while (pos.x > 0 && pos.y > 0) {
             if (pos.x % clawMachine.buttonA.x == 0L && pos.y % clawMachine.buttonA.y == 0L && pos.x / clawMachine.buttonA.x == pos.y / clawMachine.buttonA.y) {
-                solutions2.add(tokens + 3*(pos.x / clawMachine.buttonA.x))
+                solutions2.add(tokens + 3 * (pos.x / clawMachine.buttonA.x))
             }
             pos = Point(pos.x - clawMachine.buttonB.x, pos.y - clawMachine.buttonB.y)
             tokens += 1
@@ -52,16 +62,39 @@ class Day13 : Day {
         }
     }
 
+    private fun solveClawMachineMath(clawMachine: ClawMachine): Long {
+        // Find B intersect
+        val prize = clawMachine.prize
+        val ab = clawMachine.buttonA
+        val bb = clawMachine.buttonB
+        val bButtonYIntersect = 1 * prize.y - (bb.y * prize.x / bb.x)
+
+        val x = (ab.x * bb.x * bButtonYIntersect) / (bb.x * ab.y - ab.x * bb.y)
+        val y = x * ab.y / ab.x
+
+        return if (x % ab.x == 0L && y % ab.y == 0L && x / ab.x == y / ab.y) {
+            val aPresses = x / ab.x
+            val remainder = Point(prize.x - x.toLong(), prize.y - y.toLong())
+            if (remainder.x % bb.x == 0L && remainder.y % bb.y == 0L && remainder.x / bb.x == remainder.y / bb.y) {
+                val bPresses = (prize.x - x) / bb.x
+                (aPresses + bPresses).toLong()
+            } else {
+                0
+            }
+        } else {
+            0
+        }
+    }
+
     override fun part2(): Long {
         TODO("Not yet implemented")
     }
 
-    override fun part1ResultDescription(): String = "min tokens needed"
+    override fun part1ResultDescription() = "min tokens needed"
 
 
-    override fun part2ResultDescription(): String {
-        TODO("Not yet implemented")
-    }
+    override fun part2ResultDescription() = "min tokens needed for adjusted positions"
+
 
     fun readInput(): List<ClawMachine> {
         return File("inputs/day13.txt")
