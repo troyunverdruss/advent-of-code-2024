@@ -22,7 +22,7 @@ class Day13 : Day {
             clawMachines.map { ClawMachine(it.buttonA, it.buttonB, Point(it.prize.x + offset, it.prize.y + offset)) }
         return updatedClawMachines.map { clawMachine ->
             solveClawMachineMath(clawMachine)
-        }.sum().toLong()
+        }.sum()
 //         return 0L
     }
 
@@ -63,6 +63,45 @@ class Day13 : Day {
     }
 
     private fun solveClawMachineMath(clawMachine: ClawMachine): Long {
+        // Button A (j,k)
+        // Button B (r,s)
+        // Prize    (p,q)
+
+        val cm = clawMachine
+
+        // Calculate X intersection:
+        val xIntersect = (cm.buttonA.x * (cm.prize.y * cm.buttonB.x - cm.buttonB.y * cm.prize.x)) /
+                (cm.buttonA.y * cm.buttonB.x - cm.buttonB.y * cm.buttonA.x)
+        val yIntersect = (cm.buttonA.y * xIntersect) / cm.buttonA.x
+
+        val aButtonCountX = xIntersect.toDouble() / cm.buttonA.x
+        val aButtonCountY = yIntersect.toDouble() / cm.buttonA.y
+
+        if (aButtonCountX % 1 != 0.0 || aButtonCountY % 1 != 0.0) {
+            return 0
+        }
+
+        if (aButtonCountX != aButtonCountY) {
+            throw RuntimeException("intersect doesn't appear to work for A button")
+        }
+
+        // Calculate remainder for second line
+        val bButtonCountX = (cm.prize.x - xIntersect.toDouble()) / cm.buttonB.x
+        val bButtonCountY = (cm.prize.y - yIntersect.toDouble()) / cm.buttonB.y
+
+        if (bButtonCountX % 1 != 0.0 || bButtonCountY % 1 != 0.0) {
+            return 0
+        }
+
+        if (bButtonCountX != bButtonCountY) {
+            throw RuntimeException("intersect doesn't appear to work for B button")
+        }
+
+
+
+        return (aButtonCountX.toLong() * 3) + bButtonCountX.toLong()
+
+
         // Find B intersect
         val prize = clawMachine.prize
         val ab = clawMachine.buttonA
@@ -87,7 +126,9 @@ class Day13 : Day {
     }
 
     override fun part2(): Long {
-        TODO("Not yet implemented")
+        val clawMachines = readInput()
+
+        return computePart2(clawMachines)
     }
 
     override fun part1ResultDescription() = "min tokens needed"
