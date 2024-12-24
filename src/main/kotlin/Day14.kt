@@ -17,14 +17,15 @@ class Day14 : Day {
         val middleHeight = height / 2
 
         var robotPositions = listOf<Robot>()
-         repeat(cycles.toInt()) {
-           robotPositions = takeOneStep(robots, width, height)
+        repeat(cycles.toInt()) {
+            robotPositions = takeOneStep(robots, width, height)
         }
 
-        val nwCount = countRobotsInQuadrant(robotPositions, Point(0,0), Point(middleWidth, middleHeight))
-        val swCount = countRobotsInQuadrant(robotPositions, Point(0,middleHeight + 1), Point(middleWidth, height))
-        val neCount = countRobotsInQuadrant(robotPositions, Point(middleWidth+1,0), Point(width, middleHeight))
-        val seCount = countRobotsInQuadrant(robotPositions, Point(middleWidth+1, middleHeight+1), Point(width, height))
+        val nwCount = countRobotsInQuadrant(robotPositions, Point(0, 0), Point(middleWidth, middleHeight))
+        val swCount = countRobotsInQuadrant(robotPositions, Point(0, middleHeight + 1), Point(middleWidth, height))
+        val neCount = countRobotsInQuadrant(robotPositions, Point(middleWidth + 1, 0), Point(width, middleHeight))
+        val seCount =
+            countRobotsInQuadrant(robotPositions, Point(middleWidth + 1, middleHeight + 1), Point(width, height))
 
         val quadrants = mutableMapOf(Pair(Quad.NW, 0), Pair(Quad.NE, 0), Pair(Quad.SW, 0), Pair(Quad.SE, 0))
         val counts = robotPositions.fold(quadrants) { res, r ->
@@ -78,7 +79,72 @@ class Day14 : Day {
     }
 
     override fun part2(): Long {
-        TODO("Not yet implemented")
+        val robots = readInput()
+
+        return computePart2(robots)
+    }
+
+    private fun computePart2(robots: List<Robot>): Long {
+        var robotPositions = robots
+        var cycles = 0L
+        while (true) {
+            robotPositions = takeOneStep(robotPositions, 101, 103)
+            cycles += 1
+
+            for (robot in robotPositions) {
+                val testPositions = (0..32).map { idx ->
+                    Point(
+                        robot.pos.x,
+                        robot.pos.y + (Day04.Direction.DOWN.point.y * idx),
+                    )
+                }
+                if (robotPositions.map { it.pos }.containsAll(testPositions)) {
+                    Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+                    println(cycles)
+                }
+            }
+
+        }
+
+    }
+
+    private fun computePart2v1(robots: List<Robot>): Long {
+        val majority = robots.size / 2 + 1
+        var robotPositions = robots
+        var lowestCountOfPositionsForMajority = robots.size.toLong()
+        var cycles = 0L
+        while (true) {
+            robotPositions = takeOneStep(robotPositions, 101, 103)
+            cycles += 1
+            val robotPositionCounts = robotPositions.fold(mutableMapOf<Point, Long>()) { acc, r ->
+                acc[r.pos] = (acc[r.pos] ?: 0) + 1
+                acc
+            }.entries.sortedByDescending { it.value }
+            var countedRobots = 0L
+            var distinctPositions = 0L
+            val iterator = robotPositionCounts.listIterator()
+            while (countedRobots < majority && iterator.hasNext()) {
+                val next = iterator.next()
+                distinctPositions += 1
+                countedRobots += next.value
+            }
+//            Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+//            println(cycles)
+
+            if (distinctPositions <= 144) {
+                Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+                println(cycles)
+//                break
+            } else if (distinctPositions <= lowestCountOfPositionsForMajority) {
+                Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+                println(cycles)
+                lowestCountOfPositionsForMajority = distinctPositions
+            }
+            Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+            println(cycles)
+        }
+
+        return cycles
     }
 
     override fun part1ResultDescription() = "safety factor after 100 seconds"

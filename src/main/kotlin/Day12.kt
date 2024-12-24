@@ -14,21 +14,7 @@ class Day12 : Day {
             area * perimeter
         }.sum()
     }
-    fun debugPrint(region: Set<Pair<Day04.Point, Char>>, area: Int, sides: Long){
-        val map = region.toMap()
-        val minX = region.minBy { it.first.x }.first.x
-        val minY = region.minBy { it.first.y }.first.y
-        val maxX = region.maxBy { it.first.x }.first.x
-        val maxY = region.maxBy { it.first.y }.first.y
-        (minX..maxX).forEach { x ->
-            (minY..maxY).forEach { y ->
-                print(map[Day04.Point(x,y)] ?: '.')
-            }
-            println()
-        }
-        println("Area: $area")
-        println("Sides: $sides")
-    }
+
 
     fun computePart2(grid: Map<Day04.Point, Char>): Long {
         val regions = findRegions(grid)
@@ -381,4 +367,21 @@ class Day12 : Day {
     }
 
 
+    companion object {
+        fun debugPrint(region: Set<Pair<Day04.Point, Char>>, area: Int, sides: Long){
+            val map = region.toMap()
+            val minX = region.minBy { it.first.x }.first.x
+            val minY = region.minBy { it.first.y }.first.y
+            val maxX = region.maxBy { it.first.x }.first.x
+            val maxY = region.maxBy { it.first.y }.first.y
+            (minX..maxX).forEach { x ->
+                (minY..maxY).forEach { y ->
+                    print(map[Day04.Point(x,y)] ?: '.')
+                }
+                println()
+            }
+            println("Area: $area")
+            println("Sides: $sides")
+        }
+    }
 }

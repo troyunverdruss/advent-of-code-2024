@@ -116,6 +116,8 @@ class Day04 {
             return this + Direction.DOWN_RIGHT.point
         }
 
+
+
     }
 
     companion object {
