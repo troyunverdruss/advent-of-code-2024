@@ -49,7 +49,7 @@ class Day12 : Day {
         var sideCount = 0L
         val points = region.map { it.first }
 
-        points.forEach { p->
+        points.forEach { p ->
             // xP
             // PP
             if (points.contains(p.up()) && points.contains(p.left()) && !points.contains(p.upLeft())) {
@@ -189,10 +189,6 @@ class Day12 : Day {
         return edgeCount
 
 
-
-
-
-
         var combineSuccess = false
 //        var first = true
 //        while (first || combineSuccess) {
@@ -312,7 +308,7 @@ class Day12 : Day {
     }
 
 
-     fun findRegions(grid: Map<Day04.Point, Char>): List<Set<Pair<Day04.Point, Char>>> {
+    fun findRegions(grid: Map<Day04.Point, Char>): List<Set<Pair<Day04.Point, Char>>> {
         val used = mutableSetOf<Day04.Point>()
         return grid.entries.map { entry ->
             if (used.contains(entry.key)) {
@@ -368,7 +364,20 @@ class Day12 : Day {
 
 
     companion object {
-        fun debugPrint(region: Set<Pair<Day04.Point, Char>>, area: Int, sides: Long){
+        fun debugPrint(grid: Map<Day04.Point, Char>) {
+            val minX = grid.keys.minBy { it.x }.x
+            val minY = grid.keys.minBy { it.y }.y
+            val maxX = grid.keys.maxBy { it.x }.x
+            val maxY = grid.keys.maxBy { it.y }.y
+            (minY..maxY).forEach { y ->
+                (minX..maxX).forEach { x ->
+                    print(grid[Day04.Point(x, y)] ?: '.')
+                }
+                println()
+            }
+        }
+
+        fun debugPrint(region: Set<Pair<Day04.Point, Char>>, area: Int, sides: Long) {
             val map = region.toMap()
             val minX = region.minBy { it.first.x }.first.x
             val minY = region.minBy { it.first.y }.first.y
@@ -376,7 +385,7 @@ class Day12 : Day {
             val maxY = region.maxBy { it.first.y }.first.y
             (minX..maxX).forEach { x ->
                 (minY..maxY).forEach { y ->
-                    print(map[Day04.Point(x,y)] ?: '.')
+                    print(map[Day04.Point(x, y)] ?: '.')
                 }
                 println()
             }
