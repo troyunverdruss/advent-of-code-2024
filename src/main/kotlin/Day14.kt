@@ -16,19 +16,18 @@ class Day14 : Day {
         val middleWidth = width / 2
         val middleHeight = height / 2
 
-        val endingPositions = robots.map { r ->
-            Robot(
-                Point(
-                    Math.floorMod(r.pos.x + r.vel.x * cycles, width),
-                    Math.floorMod(r.pos.y + r.vel.y * cycles, height)
-                ),
-                r.vel
-            )
+        var robotPositions = listOf<Robot>()
+         repeat(cycles.toInt()) {
+           robotPositions = takeOneStep(robots, width, height)
         }
 
+        val nwCount = countRobotsInQuadrant(robotPositions, Point(0,0), Point(middleWidth, middleHeight))
+        val swCount = countRobotsInQuadrant(robotPositions, Point(0,middleHeight + 1), Point(middleWidth, height))
+        val neCount = countRobotsInQuadrant(robotPositions, Point(middleWidth+1,0), Point(width, middleHeight))
+        val seCount = countRobotsInQuadrant(robotPositions, Point(middleWidth+1, middleHeight+1), Point(width, height))
 
         val quadrants = mutableMapOf(Pair(Quad.NW, 0), Pair(Quad.NE, 0), Pair(Quad.SW, 0), Pair(Quad.SE, 0))
-        val counts = endingPositions.fold(quadrants) { res, r ->
+        val counts = robotPositions.fold(quadrants) { res, r ->
             if (r.pos.x == middleWidth || r.pos.y == middleHeight) {
                 // don't count
             } else if (r.pos.x < middleWidth && r.pos.y < middleHeight) {
@@ -46,7 +45,32 @@ class Day14 : Day {
             res
         }
 
-        return counts.values.fold(1) { r, v -> r * v }
+        return listOf(nwCount, neCount, swCount, seCount).fold(1) { r, v -> r * v }
+    }
+
+    // Lower inclusive
+    // Upper exclusive
+    private fun countRobotsInQuadrant(robotPositions: List<Robot>, lower: Point, upper: Point): Long {
+        return robotPositions.count {
+            it.pos.x >= lower.x && it.pos.y >= lower.y && it.pos.x < upper.x && it.pos.y < upper.y
+        }.toLong()
+    }
+
+    private fun takeOneStep(
+        robots: List<Robot>,
+        width: Long,
+        height: Long
+    ): List<Robot> {
+        val endingPositions = robots.map { r ->
+            Robot(
+                Point(
+                    Math.floorMod(r.pos.x + r.vel.x, width),
+                    Math.floorMod(r.pos.y + r.vel.y, height)
+                ),
+                r.vel
+            )
+        }
+        return endingPositions
     }
 
     enum class Quad {
