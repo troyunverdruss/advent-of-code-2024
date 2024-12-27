@@ -26,6 +26,39 @@ class Day16 : Day {
     }
 
     fun computePart1(grid: Map<Point, Char>): Long {
+        val solutions = findSolutions(grid)
+
+        val solution = solutions.minByOrNull { it.score }
+
+        // Print out solution
+        val path = mutableListOf<FindState>()
+        var curr = solution
+        while (curr != null) {
+            path.add(curr)
+            curr = curr.prev
+        }
+        path.reversed().forEach {
+            println("${it.pos}, ${it.dir}: ${it.score}")
+        }
+
+        return solution?.score ?: throw RuntimeException("no path found")
+    }
+
+    fun computePart2(grid: Map<Point, Char>): Long {
+        val solutions = findSolutions(grid)
+        val uniquePoints = mutableSetOf<Point>()
+        solutions.forEach { solution ->
+            var curr: FindState? = solution
+            while (curr != null) {
+                uniquePoints.add(curr.pos)
+                curr = curr.prev
+            }
+        }
+
+        return  uniquePoints.size.toLong()
+    }
+
+    private fun findSolutions(grid: Map<Point, Char>): List<FindState> {
         val start = grid.filter { it.value == 'S' }.keys.first()
         val end = grid.filter { it.value == 'E' }.keys.first()
         val visited = mutableSetOf<FindState>()
@@ -69,21 +102,7 @@ class Day16 : Day {
                 }
             }
         }
-
-        val solution = solutions.minByOrNull { it.score }
-
-        // Print out solution
-        val path = mutableListOf<FindState>()
-        var curr = solution
-        while (curr != null) {
-            path.add(curr)
-            curr = curr.prev
-        }
-        path.reversed().forEach {
-            println("${it.pos}, ${it.dir}: ${it.score}")
-        }
-
-        return solution?.score ?: throw RuntimeException("no path found")
+        return solutions.filter { it.score == bestScore }
     }
 
     fun brokenComputePart1(grid: Map<Point, Char>): Long {
