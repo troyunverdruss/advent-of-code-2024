@@ -2,6 +2,7 @@ import Utils.Direction
 import Utils.Point
 import java.io.File
 import java.util.*
+import kotlin.math.min
 
 class Day16 : Day {
     override fun part1(): Long {
@@ -32,6 +33,7 @@ class Day16 : Day {
 
         val toVisit = LinkedList(listOf(startingState))
         val solutions = mutableListOf<FindState>()
+        var bestScore = Long.MAX_VALUE
 
         while (toVisit.isNotEmpty()) {
             val curr = toVisit.removeFirst()
@@ -39,6 +41,8 @@ class Day16 : Day {
 
             if (curr.pos == end) {
                 solutions.add(curr)
+                toVisit.removeIf { it.score >= curr.score }
+                bestScore = min(curr.score, bestScore)
                 continue
             }
 
@@ -55,8 +59,11 @@ class Day16 : Day {
                 }
                 testState.prev = curr
                 if (grid[testState.pos] != '#') {
-                    val existing = visited.find { it == testState }
-                    if (existing == null || existing.score > testState.score) {
+                    val alreadyVisitedCheaper = visited.filter { it == testState && it.score <= testState.score }
+                    val toBeVisitedCheaper = toVisit.filter { it == testState && it.score <= testState.score }
+
+                    if (alreadyVisitedCheaper.isEmpty() && toBeVisitedCheaper.isEmpty() && testState.score < bestScore) {
+                        toVisit.removeIf { it == testState && it.score > testState.score }
                         toVisit.add(testState)
                     }
                 }
