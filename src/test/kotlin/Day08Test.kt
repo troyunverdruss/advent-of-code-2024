@@ -38,7 +38,7 @@ class Day08Test {
             ............
         """.trimIndent()
             .lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day08()
         assertEquals(14, d.computePart1(grid))
     }
@@ -58,7 +58,7 @@ class Day08Test {
             ..........
         """.trimIndent()
             .lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day08()
         assertEquals(9, d.computePart2(grid))
     }
@@ -80,7 +80,7 @@ class Day08Test {
             ............
         """.trimIndent()
             .lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day08()
         assertEquals(34, d.computePart2(grid))
     }

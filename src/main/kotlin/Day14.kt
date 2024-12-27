@@ -1,4 +1,4 @@
-import Day04.Point
+import Utils.Point
 import java.io.File
 
 class Day14 : Day {
@@ -95,11 +95,11 @@ class Day14 : Day {
                 val testPositions = (0..32).map { idx ->
                     Point(
                         robot.pos.x,
-                        robot.pos.y + (Day04.Direction.DOWN.point.y * idx),
+                        robot.pos.y + (Utils.Direction.DOWN.point.y * idx),
                     )
                 }
                 if (robotPositions.map { it.pos }.containsAll(testPositions)) {
-                    Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+                    Utils.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
                     println(cycles)
                 }
             }
@@ -128,19 +128,19 @@ class Day14 : Day {
                 distinctPositions += 1
                 countedRobots += next.value
             }
-//            Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+//            Utils.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
 //            println(cycles)
 
             if (distinctPositions <= 144) {
-                Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+                Utils.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
                 println(cycles)
 //                break
             } else if (distinctPositions <= lowestCountOfPositionsForMajority) {
-                Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+                Utils.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
                 println(cycles)
                 lowestCountOfPositionsForMajority = distinctPositions
             }
-            Day12.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
+            Utils.debugPrint(robotPositions.map { Pair(it.pos, '#') }.toSet(), 0, 0L)
             println(cycles)
         }
 

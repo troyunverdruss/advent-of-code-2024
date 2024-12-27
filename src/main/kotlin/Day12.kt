@@ -1,12 +1,13 @@
+import Utils.debugPrint
 import java.util.LinkedList
 
 class Day12 : Day {
     override fun part1(): Long {
-        val grid = Day04.readGrid("inputs/day12.txt")
+        val grid = Utils.readGrid("inputs/day12.txt")
         return computePart1(grid)
     }
 
-    fun computePart1(grid: Map<Day04.Point, Char>): Long {
+    fun computePart1(grid: Map<Utils.Point, Char>): Long {
         val regions = findRegions(grid)
         return regions.map { region ->
             val area = region.size
@@ -16,7 +17,7 @@ class Day12 : Day {
     }
 
 
-    fun computePart2(grid: Map<Day04.Point, Char>): Long {
+    fun computePart2(grid: Map<Utils.Point, Char>): Long {
         val regions = findRegions(grid)
         val costs = regions.map { region ->
             val area = region.size
@@ -27,7 +28,7 @@ class Day12 : Day {
         return costs.sum()
     }
 
-    private fun computePerimeter(grid: Map<Day04.Point, Char>, region: Set<Pair<Day04.Point, Char>>): Long {
+    private fun computePerimeter(grid: Map<Utils.Point, Char>, region: Set<Pair<Utils.Point, Char>>): Long {
         return region.flatMap { entry ->
             directions.map { dir ->
                 if (grid[entry.first + dir.point] != entry.second) {
@@ -39,13 +40,13 @@ class Day12 : Day {
         }.sum()
     }
 
-    data class Edge(val start: Day04.Point, val end: Day04.Point) {
-        fun slope(): Day04.Point {
-            return Day04.Point(end.x - start.x, end.y - start.y)
+    data class Edge(val start: Utils.Point, val end: Utils.Point) {
+        fun slope(): Utils.Point {
+            return Utils.Point(end.x - start.x, end.y - start.y)
         }
     }
 
-    fun computeNumberOfSides(grid: Map<Day04.Point, Char>, region: Set<Pair<Day04.Point, Char>>): Long {
+    fun computeNumberOfSides(grid: Map<Utils.Point, Char>, region: Set<Pair<Utils.Point, Char>>): Long {
         var sideCount = 0L
         val points = region.map { it.first }
 
@@ -83,42 +84,42 @@ class Day12 : Day {
     }
 
 
-    fun computeNumberOfSidesBroken(grid: Map<Day04.Point, Char>, region: Set<Pair<Day04.Point, Char>>): Long {
+    fun computeNumberOfSidesBroken(grid: Map<Utils.Point, Char>, region: Set<Pair<Utils.Point, Char>>): Long {
         val allEdges = region.flatMap { entry ->
             directions.map { dir ->
                 when (dir) {
-                    Day04.Direction.UP -> {
+                    Utils.Direction.UP -> {
                         if (grid[entry.first + dir.point] != entry.second) {
-                            Edge(entry.first, entry.first + Day04.Direction.RIGHT.point)
+                            Edge(entry.first, entry.first + Utils.Direction.RIGHT.point)
                         } else {
                             null
                         }
                     }
 
-                    Day04.Direction.DOWN -> {
+                    Utils.Direction.DOWN -> {
                         if (grid[entry.first + dir.point] != entry.second) {
                             Edge(
-                                entry.first + Day04.Direction.DOWN.point,
-                                entry.first + Day04.Direction.DOWN_RIGHT.point
+                                entry.first + Utils.Direction.DOWN.point,
+                                entry.first + Utils.Direction.DOWN_RIGHT.point
                             )
                         } else {
                             null
                         }
                     }
 
-                    Day04.Direction.LEFT -> {
+                    Utils.Direction.LEFT -> {
                         if (grid[entry.first + dir.point] != entry.second) {
-                            Edge(entry.first, entry.first + Day04.Direction.DOWN.point)
+                            Edge(entry.first, entry.first + Utils.Direction.DOWN.point)
                         } else {
                             null
                         }
                     }
 
-                    Day04.Direction.RIGHT -> {
+                    Utils.Direction.RIGHT -> {
                         if (grid[entry.first + dir.point] != entry.second) {
                             Edge(
-                                entry.first + Day04.Direction.RIGHT.point,
-                                entry.first + Day04.Direction.DOWN_RIGHT.point
+                                entry.first + Utils.Direction.RIGHT.point,
+                                entry.first + Utils.Direction.DOWN_RIGHT.point
                             )
                         } else {
                             null
@@ -194,8 +195,8 @@ class Day12 : Day {
 //        while (first || combineSuccess) {
 //            first = false
 //            combineSuccess = false
-//            val newEdges = mutableSetOf<Pair<Day04.Point, Day04.Point>>()
-//            val processedEdges = mutableSetOf<Pair<Day04.Point, Day04.Point>>()
+//            val newEdges = mutableSetOf<Pair<Utils.Point, Utils.Point>>()
+//            val processedEdges = mutableSetOf<Pair<Utils.Point, Utils.Point>>()
 //
 //            for (edge in exteriorEdges) {
 //                if (processedEdges.contains(edge)) {
@@ -236,13 +237,13 @@ class Day12 : Day {
 ////        val start = grid.keys.filter { it.x == minX }.minBy { it.y }
 ////
 ////        // Make sure that we're in an upper left corner of the shape
-////        if (grid[start + Day04.Direction.UP.point] == grid[start] || grid[start + Day04.Direction.LEFT.point] == grid[start]) {
+////        if (grid[start + Utils.Direction.UP.point] == grid[start] || grid[start + Utils.Direction.LEFT.point] == grid[start]) {
 ////            throw RuntimeException("Expected to be in top left corner and wasn't")
 ////        }
 ////
 ////        var sides = 1
 ////        var pos = start
-////        var currDir = Day04.Direction.RIGHT
+////        var currDir = Utils.Direction.RIGHT
 ////        while (sides == 1 || pos != start) {
 ////            var nextStep =
 ////        }
@@ -288,7 +289,7 @@ class Day12 : Day {
 //        TODO()
     }
 
-    private fun getSlope(edge: Pair<Day04.Point, Day04.Point>): Day04.Point {
+    private fun getSlope(edge: Pair<Utils.Point, Utils.Point>): Utils.Point {
         val x = edge.second.x - edge.first.x
         val y = edge.second.y - edge.first.y
 
@@ -304,12 +305,12 @@ class Day12 : Day {
             1L
         }
 
-        return Day04.Point(newX, newY)
+        return Utils.Point(newX, newY)
     }
 
 
-    fun findRegions(grid: Map<Day04.Point, Char>): List<Set<Pair<Day04.Point, Char>>> {
-        val used = mutableSetOf<Day04.Point>()
+    fun findRegions(grid: Map<Utils.Point, Char>): List<Set<Pair<Utils.Point, Char>>> {
+        val used = mutableSetOf<Utils.Point>()
         return grid.entries.map { entry ->
             if (used.contains(entry.key)) {
                 // Nothing to do for these, they've already been handled
@@ -322,14 +323,14 @@ class Day12 : Day {
         }.filterNotNull()
     }
 
-    val directions = listOf(Day04.Direction.UP, Day04.Direction.DOWN, Day04.Direction.LEFT, Day04.Direction.RIGHT)
-    private fun findSingleRegion(grid: Map<Day04.Point, Char>, point: Day04.Point): Set<Pair<Day04.Point, Char>> {
-        val visited = mutableSetOf<Day04.Point>()
-        val toVisit = LinkedList<Day04.Point>()
+    val directions = listOf(Utils.Direction.UP, Utils.Direction.DOWN, Utils.Direction.LEFT, Utils.Direction.RIGHT)
+    private fun findSingleRegion(grid: Map<Utils.Point, Char>, point: Utils.Point): Set<Pair<Utils.Point, Char>> {
+        val visited = mutableSetOf<Utils.Point>()
+        val toVisit = LinkedList<Utils.Point>()
         toVisit.add(point)
         val plantType = grid[point] ?: throw RuntimeException("Starting point is not valid")
 
-        val region = mutableSetOf<Pair<Day04.Point, Char>>()
+        val region = mutableSetOf<Pair<Utils.Point, Char>>()
 
         while (toVisit.isNotEmpty()) {
             val curr = toVisit.pop()
@@ -350,7 +351,7 @@ class Day12 : Day {
     }
 
     override fun part2(): Long {
-        val grid = Day04.readGrid("inputs/day12.txt")
+        val grid = Utils.readGrid("inputs/day12.txt")
         return computePart2(grid)
     }
 
@@ -363,34 +364,5 @@ class Day12 : Day {
     }
 
 
-    companion object {
-        fun debugPrint(grid: Map<Day04.Point, Char>) {
-            val minX = grid.keys.minBy { it.x }.x
-            val minY = grid.keys.minBy { it.y }.y
-            val maxX = grid.keys.maxBy { it.x }.x
-            val maxY = grid.keys.maxBy { it.y }.y
-            (minY..maxY).forEach { y ->
-                (minX..maxX).forEach { x ->
-                    print(grid[Day04.Point(x, y)] ?: '.')
-                }
-                println()
-            }
-        }
 
-        fun debugPrint(region: Set<Pair<Day04.Point, Char>>, area: Int, sides: Long) {
-            val map = region.toMap()
-            val minX = region.minBy { it.first.x }.first.x
-            val minY = region.minBy { it.first.y }.first.y
-            val maxX = region.maxBy { it.first.x }.first.x
-            val maxY = region.maxBy { it.first.y }.first.y
-            (minX..maxX).forEach { x ->
-                (minY..maxY).forEach { y ->
-                    print(map[Day04.Point(x, y)] ?: '.')
-                }
-                println()
-            }
-            println("Area: $area")
-            println("Sides: $sides")
-        }
-    }
 }

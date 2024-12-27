@@ -1,4 +1,4 @@
-import Day04.Point
+import Utils.Point
 import java.io.File
 import kotlin.math.max
 

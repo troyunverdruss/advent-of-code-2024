@@ -21,7 +21,7 @@ class Day06Test {
     @Test
     fun `part 1 example`() {
 
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day06()
 
         assertEquals(41, d.countVisitedSquares(grid))
@@ -29,7 +29,7 @@ class Day06Test {
 
     @Test
     fun `part 2 example`() {
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day06()
 
         assertEquals(6, d.computePart2(grid))

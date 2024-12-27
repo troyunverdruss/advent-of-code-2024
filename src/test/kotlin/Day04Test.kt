@@ -19,7 +19,7 @@ class Day04Test {
             .lines()
             .flatMapIndexed { y: Int, line: String ->
                 line.mapIndexed { x: Int, c: Char ->
-                    Pair(Day04.Point(x.toLong(), y.toLong()), c)
+                    Pair(Utils.Point(x.toLong(), y.toLong()), c)
                 }
             }.toMap()
 
@@ -65,7 +65,7 @@ class Day04Test {
             .lines()
             .flatMapIndexed { y: Int, line: String ->
                 line.mapIndexed { x: Int, c: Char ->
-                    Pair(Day04.Point(x.toLong(), y.toLong()), c)
+                    Pair(Utils.Point(x.toLong(), y.toLong()), c)
                 }
             }.toMap()
 
@@ -94,7 +94,7 @@ class Day04Test {
             .lines()
             .flatMapIndexed { y: Int, line: String ->
                 line.mapIndexed { x: Int, c: Char ->
-                    Pair(Day04.Point(x.toLong(), y.toLong()), c)
+                    Pair(Utils.Point(x.toLong(), y.toLong()), c)
                 }
             }.toMap()
 

@@ -1,4 +1,6 @@
-import java.io.File
+import Utils.Point
+import Utils.Direction
+import Utils.readGrid
 
 class Day04 {
     var count = 0
@@ -34,32 +36,8 @@ class Day04 {
 
     }
 
-    enum class Direction(val point: Point) {
-        UP_LEFT(Point(-1, -1)),
-        NONE(Point(0, 0)),
-        DOWN_RIGHT(Point(1, 1)),
-        DOWN_LEFT(Point(-1, 1)),
-        UP_RIGHT(Point(1, -1)),
-        UP(Point(0, -1)),
-        DOWN(Point(0, 1)),
-        LEFT(Point(-1, 0)),
-        RIGHT(Point(1, 0));
 
-        companion object {
-
-            fun turnRight90(direction: Direction): Direction {
-                return when (direction) {
-                    UP -> RIGHT
-                    DOWN -> LEFT
-                    LEFT -> UP
-                    RIGHT -> DOWN
-                    else -> throw RuntimeException("Unknown direction $direction")
-                }
-            }
-        }
-    }
-
-    fun findCrossingMasCount(pos: Point, grid: Map<Point, Char>): Long {
+    fun findCrossingMasCount(pos: Utils.Point, grid: Map<Utils.Point, Char>): Long {
         val diagDown = listOf(
             Direction.UP_LEFT,
             Direction.NONE,
@@ -80,59 +58,6 @@ class Day04 {
             1
         } else {
             0
-        }
-    }
-
-
-    data class Point(val x: Long, val y: Long) {
-        operator fun plus(p: Point): Point {
-            return Point(this.x + p.x, this.y + p.y)
-        }
-        operator fun minus(p: Point): Point {
-            return Point(this.x - p.x, this.y - p.y)
-        }
-        fun up(): Point {
-            return this + Direction.UP.point
-        }
-        fun down(): Point {
-            return this + Direction.DOWN.point
-        }
-        fun left(): Point {
-            return this + Direction.LEFT.point
-        }
-        fun right(): Point {
-            return this + Direction.RIGHT.point
-        }
-        fun upLeft(): Point {
-            return this + Direction.UP_LEFT.point
-        }
-        fun upRight(): Point {
-            return this + Direction.UP_RIGHT.point
-        }
-        fun downLeft(): Point {
-            return this + Direction.DOWN_LEFT.point
-        }
-        fun downRight(): Point {
-            return this + Direction.DOWN_RIGHT.point
-        }
-
-
-
-    }
-
-    companion object {
-
-        fun readGrid(filePath: String): Map<Point, Char> {
-            return parseGrid(File(filePath).readLines())
-        }
-
-        fun parseGrid(lines: List<String>): Map<Point, Char> {
-            return lines.filter { it.isNotBlank() }
-                .flatMapIndexed { y: Int, line: String ->
-                    line.mapIndexed { x: Int, c: Char ->
-                        Pair(Point(x.toLong(), y.toLong()), c)
-                    }
-                }.toMap()
         }
     }
 }

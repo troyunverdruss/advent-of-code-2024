@@ -1,12 +1,12 @@
 class Day08 {
     fun part1(): Long {
-        val grid = Day04.readGrid("inputs/day08.txt")
+        val grid = Utils.readGrid("inputs/day08.txt")
         return computePart1(grid)
     }
 
-    fun computePart1(grid: Map<Day04.Point, Char>): Long {
+    fun computePart1(grid: Map<Utils.Point, Char>): Long {
         val frequencies = grid.values.distinct().filter { it != '.' }
-        val antiNodeLocations = mutableSetOf<Day04.Point>()
+        val antiNodeLocations = mutableSetOf<Utils.Point>()
         frequencies.forEach { frequency ->
             val freqLocs = grid.filter { it.value == frequency }.map { it.key }
             combinations(freqLocs).forEach { (a, b) ->
@@ -28,13 +28,13 @@ class Day08 {
     }
 
     fun part2(): Long {
-        val grid = Day04.readGrid("inputs/day08.txt")
+        val grid = Utils.readGrid("inputs/day08.txt")
         return computePart2(grid)
     }
 
-    fun computePart2(grid: Map<Day04.Point, Char>): Long {
+    fun computePart2(grid: Map<Utils.Point, Char>): Long {
         val frequencies = grid.values.distinct().filter { it != '.' }
-        val antiNodeLocations = mutableSetOf<Day04.Point>()
+        val antiNodeLocations = mutableSetOf<Utils.Point>()
         frequencies.forEach { frequency ->
             val freqLocs = grid.filter { it.value == frequency }.map { it.key }
             combinations(freqLocs).forEach { (a, b) ->
@@ -67,11 +67,11 @@ class Day08 {
         }
     }
 
-    fun slope(a: Day04.Point, b: Day04.Point): Day04.Point {
-        return Day04.Point(a.x - b.x, a.y - b.y)
+    fun slope(a: Utils.Point, b: Utils.Point): Utils.Point {
+        return Utils.Point(a.x - b.x, a.y - b.y)
     }
 
-    fun invertPoint(point: Day04.Point): Day04.Point {
-        return Day04.Point(-point.x, -point.y)
+    fun invertPoint(point: Utils.Point): Utils.Point {
+        return Utils.Point(-point.x, -point.y)
     }
 }

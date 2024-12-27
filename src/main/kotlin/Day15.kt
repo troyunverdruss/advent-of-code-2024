@@ -1,5 +1,5 @@
-import Day04.Companion.parseGrid
-import Day04.Point
+import Utils.parseGrid
+import Utils.Point
 import java.io.File
 
 class Day15 : Day {
@@ -61,10 +61,10 @@ class Day15 : Day {
     }
 
     val dirLookup = mapOf(
-        '^' to Day04.Direction.UP.point,
-        'v' to Day04.Direction.DOWN.point,
-        '<' to Day04.Direction.LEFT.point,
-        '>' to Day04.Direction.RIGHT.point,
+        '^' to Utils.Direction.UP.point,
+        'v' to Utils.Direction.DOWN.point,
+        '<' to Utils.Direction.LEFT.point,
+        '>' to Utils.Direction.RIGHT.point,
     )
 
     fun computePart1(input: Day15Input): Long {
@@ -74,10 +74,10 @@ class Day15 : Day {
         val grid = input.grid.toMutableMap()
         input.instructions.forEach { instruction ->
             val direction = when (instruction) {
-                '^' -> Day04.Direction.UP.point
-                'v' -> Day04.Direction.DOWN.point
-                '<' -> Day04.Direction.LEFT.point
-                '>' -> Day04.Direction.RIGHT.point
+                '^' -> Utils.Direction.UP.point
+                'v' -> Utils.Direction.DOWN.point
+                '<' -> Utils.Direction.LEFT.point
+                '>' -> Utils.Direction.RIGHT.point
                 else -> throw RuntimeException("Unknown direction: $instruction")
             }
             if (grid[pos + direction] == '.') {
@@ -120,10 +120,10 @@ class Day15 : Day {
         val grid = input.grid.toMutableMap()
         input.instructions.forEach { instruction ->
             val direction = when (instruction) {
-                '^' -> Day04.Direction.UP.point
-                'v' -> Day04.Direction.DOWN.point
-                '<' -> Day04.Direction.LEFT.point
-                '>' -> Day04.Direction.RIGHT.point
+                '^' -> Utils.Direction.UP.point
+                'v' -> Utils.Direction.DOWN.point
+                '<' -> Utils.Direction.LEFT.point
+                '>' -> Utils.Direction.RIGHT.point
                 else -> throw RuntimeException("Unknown direction: $instruction")
             }
             if (grid[pos + direction] == '.') {
@@ -174,7 +174,7 @@ class Day15 : Day {
                 throw RuntimeException("Unknown grid data: ${grid[pos + direction]}")
             }
 //            println("Move $instruction:")
-//            Day12.debugPrint(grid)
+//            Utils.debugPrint(grid)
         }
 
         return grid.filter { it.value == '[' }.map { it.key }.map { it.y * 100L + it.x }.sum()
@@ -203,12 +203,12 @@ class Day15 : Day {
         val res = mutableListOf<Pair<Point, Char>>()
         val testPosition2 = if (grid[testPosition] == '[') {
             res.add(Pair(testPosition, '['))
-            res.add(Pair(testPosition + Day04.Direction.RIGHT.point, ']'))
-            testPosition + Day04.Direction.RIGHT.point
+            res.add(Pair(testPosition + Utils.Direction.RIGHT.point, ']'))
+            testPosition + Utils.Direction.RIGHT.point
         } else {
             res.add(Pair(testPosition, ']'))
-            res.add(Pair(testPosition + Day04.Direction.LEFT.point, '['))
-            testPosition + Day04.Direction.LEFT.point
+            res.add(Pair(testPosition + Utils.Direction.LEFT.point, '['))
+            testPosition + Utils.Direction.LEFT.point
         }
 
 

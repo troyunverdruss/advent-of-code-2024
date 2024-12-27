@@ -11,6 +11,7 @@ import Day12
 import Day13
 import Day14
 import Day15
+import Day16
 
 fun main() {
 //    println("Day 1")
@@ -111,11 +112,19 @@ fun main() {
 //    println("Part 1, ${d14.part1ResultDescription()}: $d14r1")
 //    val d14r2 = d14.part2()
 //    println("Part 2, ${d14.part2ResultDescription()}: $d14r2")
+//
+//    println("Day 15")
+//    val d15 = Day15()
+//    val d15r1 = d15.part1()
+//    println("Part 1, ${d15.part1ResultDescription()}: $d15r1")
+//    val d15r2 = d15.part2()
+//    println("Part 2, ${d15.part2ResultDescription()}: $d15r2")
 
-    println("Day 15")
-    val d15 = Day15()
-    val d15r1 = d15.part1()
-    println("Part 1, ${d15.part1ResultDescription()}: $d15r1")
-    val d15r2 = d15.part2()
-    println("Part 2, ${d15.part2ResultDescription()}: $d15r2")
+
+    println("Day 16")
+    val d16 = Day16()
+    val d16r1 = d16.part1()
+    println("Part 1, ${d16.part1ResultDescription()}: $d16r1")
+    val d16r2 = d16.part2()
+    println("Part 2, ${d16.part2ResultDescription()}: $d16r2")
 }

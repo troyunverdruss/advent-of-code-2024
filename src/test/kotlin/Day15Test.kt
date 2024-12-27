@@ -79,7 +79,7 @@ class Day15Test {
         """.trimIndent()
         val d = Day15()
         val day15Input = d.parseRawInput(input, scaleUp=true)
-        Day12.debugPrint(day15Input.grid)
+        Utils.debugPrint(day15Input.grid)
         assertEquals(9021, d.computePart2(day15Input))
 
     }
@@ -99,7 +99,7 @@ class Day15Test {
         """.trimIndent()
         val d = Day15()
         val day15Input = d.parseRawInput(input, scaleUp=true)
-        Day12.debugPrint(day15Input.grid)
+        Utils.debugPrint(day15Input.grid)
         assertEquals(9021, d.computePart2(day15Input))
     }
 
@@ -109,8 +109,8 @@ class Day15Test {
             12
             34
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
-        Day12.debugPrint(grid)
+        val grid = Utils.parseGrid(lines)
+        Utils.debugPrint(grid)
     }
 
     @Test
@@ -126,7 +126,7 @@ class Day15Test {
         """.trimIndent()
         val d = Day15()
         val day15Input = d.parseRawInput(input, scaleUp=true)
-        Day12.debugPrint(day15Input.grid)
+        Utils.debugPrint(day15Input.grid)
         assertEquals(9021, d.computePart2(day15Input))
     }
 
@@ -148,7 +148,7 @@ class Day15Test {
         """.trimIndent()
         val d = Day15()
         val day15Input = d.parseRawInput(input, scaleUp=false)
-        Day12.debugPrint(day15Input.grid)
+        Utils.debugPrint(day15Input.grid)
         assertEquals(9021, d.computePart2(day15Input))
     }
 }

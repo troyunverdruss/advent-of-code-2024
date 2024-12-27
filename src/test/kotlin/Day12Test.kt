@@ -10,7 +10,7 @@ class Day12Test {
             BBCC
             EEEC
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(140, d.computePart1(grid))
     }
@@ -23,7 +23,7 @@ class Day12Test {
             BBCC
             EEEC
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(80, d.computePart2(grid))
     }
@@ -37,7 +37,7 @@ class Day12Test {
             OXOXO
             OOOOO
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(436, d.computePart2(grid))
     }
@@ -51,7 +51,7 @@ class Day12Test {
             EXXXX
             EEEEE
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(236, d.computePart2(grid))
     }
@@ -66,7 +66,7 @@ class Day12Test {
             ABBAAA
             AAAAAA
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(368, d.computePart2(grid))
     }
@@ -85,7 +85,7 @@ class Day12Test {
             MIIISIJEEE
             MMMISSJEEE
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         val regions = d.findRegions(grid)
         val expected = mapOf<Char, Triple<Long, Long, Long>>(
@@ -123,10 +123,10 @@ println("$key area: ${d.computeNumberOfSides(grid, region)}")
         val d = Day12()
         d.computeNumberOfSides(
             mutableMapOf(), setOf(
-                Pair(Day04.Point(0, 0), 'A'),
-                Pair(Day04.Point(1, 0), 'A'),
-                Pair(Day04.Point(0, 1), 'A'),
-                Pair(Day04.Point(1, 1), 'A'),
+                Pair(Utils.Point(0, 0), 'A'),
+                Pair(Utils.Point(1, 0), 'A'),
+                Pair(Utils.Point(0, 1), 'A'),
+                Pair(Utils.Point(1, 1), 'A'),
 
                 )
         )
@@ -139,7 +139,7 @@ println("$key area: ${d.computeNumberOfSides(grid, region)}")
             ABA
             AAA
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(d.computePart2(grid), 68)
     }
@@ -149,7 +149,7 @@ println("$key area: ${d.computeNumberOfSides(grid, region)}")
         val lines = """
             A
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(d.computePart2(grid), 4)
     }
@@ -162,7 +162,7 @@ println("$key area: ${d.computeNumberOfSides(grid, region)}")
             ABAA
             AAAA
         """.trimIndent().lines()
-        val grid = Day04.parseGrid(lines)
+        val grid = Utils.parseGrid(lines)
         val d = Day12()
         assertEquals(d.computePart2(grid), 12*14+8)
     }

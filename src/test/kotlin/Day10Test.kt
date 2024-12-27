@@ -12,7 +12,7 @@ class Day10Test {
         9876
     """.trimIndent().lines()
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(1, d.computePart1(grid))
     }
 
@@ -29,7 +29,7 @@ class Day10Test {
     """.trimIndent().lines()
 
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(2, d.computePart1(grid))
     }
 
@@ -46,7 +46,7 @@ class Day10Test {
     """.trimIndent().lines()
 
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(4, d.computePart1(grid))
     }
 
@@ -64,7 +64,7 @@ class Day10Test {
     """.trimIndent().lines()
 
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(3, d.computePart1(grid))
     }
 
@@ -82,7 +82,7 @@ class Day10Test {
     """.trimIndent().lines()
 
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(36, d.computePart1(grid))
     }
 
@@ -99,7 +99,7 @@ class Day10Test {
         ..9....
     """.trimIndent().lines()
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(3, d.computePart2(grid))
     }
 
@@ -115,7 +115,7 @@ class Day10Test {
         987....
     """.trimIndent().lines()
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(13, d.computePart2(grid))
     }
 
@@ -130,7 +130,7 @@ class Day10Test {
         56789.
     """.trimIndent().lines()
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(227, d.computePart2(grid))
     }
 
@@ -147,7 +147,7 @@ class Day10Test {
         10456732
     """.trimIndent().lines()
         val d = Day10()
-        val grid = d.parseToLongsGrid(Day04.parseGrid(lines))
+        val grid = d.parseToLongsGrid(Utils.parseGrid(lines))
         assertEquals(81, d.computePart2(grid))
     }
 

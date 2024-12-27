@@ -1,29 +1,29 @@
 class Day10 {
     fun part1(): Long {
-        val grid = parseToLongsGrid(Day04.readGrid("inputs/day10.txt"))
+        val grid = parseToLongsGrid(Utils.readGrid("inputs/day10.txt"))
         return computePart1(grid)
     }
 
-    fun computePart1(grid: Map<Day04.Point, Long?>): Long {
+    fun computePart1(grid: Map<Utils.Point, Long?>): Long {
         val starts = grid.filter { it.value == 0L }.map { it.key }
         return starts.map { computeTrailheadScore(grid, it) }.sum()
     }
 
-    fun computePart2(grid: Map<Day04.Point, Long?>): Long {
+    fun computePart2(grid: Map<Utils.Point, Long?>): Long {
         val starts = grid.filter { it.value == 0L }.map { it.key }
         return starts.map { computeTrailheadRating(grid, it) }.sum()
     }
 
-    private val dirs = listOf(Day04.Direction.UP, Day04.Direction.DOWN, Day04.Direction.LEFT, Day04.Direction.RIGHT)
+    private val dirs = listOf(Utils.Direction.UP, Utils.Direction.DOWN, Utils.Direction.LEFT, Utils.Direction.RIGHT)
 
-    private data class SearchPoint(val pos: Day04.Point, val height: Long)
+    private data class SearchPoint(val pos: Utils.Point, val height: Long)
 
-    private fun computeTrailheadScore(grid: Map<Day04.Point, Long?>, trailheadStart: Day04.Point): Long {
+    private fun computeTrailheadScore(grid: Map<Utils.Point, Long?>, trailheadStart: Utils.Point): Long {
         val start = SearchPoint(trailheadStart, 0)
         val visited = mutableSetOf<SearchPoint>()
         val toVisit = mutableListOf<SearchPoint>(start)
 
-        var uniqueDestinations = mutableSetOf<Day04.Point>()
+        var uniqueDestinations = mutableSetOf<Utils.Point>()
         while (toVisit.isNotEmpty()) {
             val cur = toVisit.removeFirst()
             visited.add(cur)
@@ -48,7 +48,7 @@ class Day10 {
         return uniqueDestinations.size.toLong()
     }
 
-    private fun computeTrailheadRating(grid: Map<Day04.Point, Long?>, trailheadStart: Day04.Point): Long {
+    private fun computeTrailheadRating(grid: Map<Utils.Point, Long?>, trailheadStart: Utils.Point): Long {
         val start = SearchPoint(trailheadStart, 0)
         val toVisit = mutableListOf<SearchPoint>(start)
 
@@ -73,7 +73,7 @@ class Day10 {
         return rating
     }
 
-    fun parseToLongsGrid(readGrid: Map<Day04.Point, Char>): Map<Day04.Point, Long?> {
+    fun parseToLongsGrid(readGrid: Map<Utils.Point, Char>): Map<Utils.Point, Long?> {
         return readGrid.map { it ->
             val value = if (it.value == '.') {
                 null
@@ -85,7 +85,7 @@ class Day10 {
     }
 
     fun part2(): Long {
-        val grid = parseToLongsGrid(Day04.readGrid("inputs/day10.txt"))
+        val grid = parseToLongsGrid(Utils.readGrid("inputs/day10.txt"))
         return computePart2(grid)
     }
 
