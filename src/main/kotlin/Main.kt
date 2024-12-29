@@ -123,8 +123,8 @@ fun main() {
 
     println("Day 16")
     val d16 = Day16()
-    val d16r1 = d16.part1()
-    println("Part 1, ${d16.part1ResultDescription()}: $d16r1")
+//    val d16r1 = d16.part1()
+//    println("Part 1, ${d16.part1ResultDescription()}: $d16r1")
     val d16r2 = d16.part2()
     println("Part 2, ${d16.part2ResultDescription()}: $d16r2")
 }
