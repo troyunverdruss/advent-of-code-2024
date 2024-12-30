@@ -11,14 +11,14 @@ class Day17 : Day {
     }
 
     override fun part2(): Long {
-        TODO("Not yet implemented")
+        val c = Computer()
+        c.initialize(File("inputs/day17.txt").readLines())
+        return c.runUntilOutputMatchesInstructions().toLong()
     }
 
     override fun part1ResultDescription() = "program output"
 
-    override fun part2ResultDescription(): String {
-        TODO("Not yet implemented")
-    }
+    override fun part2ResultDescription() = "a register val to output program input"
 
 
 }
@@ -68,6 +68,32 @@ class Computer {
                 pointer += 2
             }
         }
+    }
+
+    fun runUntilOutputMatchesInstructions(): Int {
+        var startingA = 0
+        while (output != instructions) {
+            startingA += 1
+            reset(startingA)
+            while (pointer in 0..instructions.lastIndex) {
+                val advancePointer = step()
+                if (advancePointer) {
+                    pointer += 2
+                }
+                if (output != instructions.slice(0..<output.size)) {
+                    break
+                }
+            }
+        }
+        return startingA
+    }
+
+    fun reset(initRegA: Int) {
+        regA = initRegA
+        regB = 0
+        regC = 0
+        pointer = 0
+        output.clear()
     }
 
     fun step(): Boolean {

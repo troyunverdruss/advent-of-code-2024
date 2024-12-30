@@ -18,6 +18,23 @@ class ComputerTest {
             c.output,
             listOf(4, 6, 3, 5, 6, 3, 5, 2, 1, 0)
         )
+    }
 
+    @Test
+    fun `example part 2 computer`() {
+        val lines = """
+            Register A: 2024
+            Register B: 0
+            Register C: 0
+
+            Program: 0,3,5,4,3,0
+        """.trimIndent().lines()
+        val c = Computer()
+        c.initialize(lines)
+        val valueRegA = c.runUntilOutputMatchesInstructions()
+        assertEquals(
+            valueRegA,
+            117440
+        )
     }
 }
