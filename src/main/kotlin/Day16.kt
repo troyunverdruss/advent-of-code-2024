@@ -32,6 +32,9 @@ class Day16 : Day {
 
     fun computePart1(grid: Map<Point, Char>): Long {
         val solutions = findSolutions(grid)
+        val start = grid.filter { it.value == 'S' }.keys.first()
+//        val possiblePaths = findPaths(grid, Step(start, Direction.RIGHT))
+//        val paths = possiblePaths?.map { getPathFromEnd(it) } ?: throw RuntimeException("no path")
 
         val solution = solutions.minByOrNull { it.score }
 
@@ -65,28 +68,72 @@ class Day16 : Day {
     }
 
     fun computePart2(grid: Map<Point, Char>): Long {
-        val solutions = findSolutions1(grid)
-//        val uniquePoints = mutableSetOf<Point>()
-//        solutions.forEach { solution ->
-//            var curr: FindState? = solution
-//            while (curr != null) {
-//                uniquePoints.add(curr.pos)
-//                curr = curr.prev
+        val start = grid.filter { it.value == 'S' }.keys.first()
+        val end = grid.filter { it.value == 'E' }.keys.first()
+        val pathFinderUtil = PathFinderUtil(grid)
+        val paths = pathFinderUtil.find(start, end, setOf(), listOf())
+
+        val pathsToScores = paths.map { path ->
+            path to computeSolutionScore(path.points)
+        }
+        val lowestScore = pathsToScores.minBy { it.second }.second
+
+        return pathsToScores.filter { it.second == lowestScore }.flatMap { it.first.points }.toSet().size.toLong()
+
+
+
+
+//        val possiblePaths = findPaths(grid, start, setOf())
+////        val paths = possiblePaths?.map { getPathFromEnd(it) } ?: throw RuntimeException("no path")
+//
+////        val pathsToScores = paths.map { path ->
+////            path to computeSolutionScore(path)
+////        }
+////        val lowestScore = pathsToScores.minBy { it.second }.second
+////
+////        val bestPaths = pathsToScores.filter { it.second == lowestScore }.map { it.first }
+////        val uniquePoints = bestPaths.flatten().toSet()
+////        return uniquePoints.size.toLong()
+//
+//
+//        val intersections = grid.map { (p, v) ->
+//            val neighbors = listOf(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT)
+//            val vals = neighbors.mapNotNull { grid[p + it.point] }.filter { it != '#' }
+//            if (vals.size > 2) {
+//                p
+//            } else {
+//                null
 //            }
-//        }
-        val uniquePoints = solutions.flatten().toSet()
-        return uniquePoints.size.toLong()
+//        }.filterNotNull()
+//
+//TODO()
+////        val solutions = findSolutions1(grid)
+////        val uniquePoints = mutableSetOf<Point>()
+////        solutions.forEach { solution ->
+////            var curr: FindState? = solution
+////            while (curr != null) {
+////                uniquePoints.add(curr.pos)
+////                curr = curr.prev
+////            }
+////        }
+////        val uniquePoints = solutions.flatten().toSet()
+////        return uniquePoints.size.toLong()
     }
 
     private fun findSolutions1(
         grid: Map<Point, Char>,
     ): List<List<Point>> {
         val start = grid.filter { it.value == 'S' }.keys.first()
-        val end = grid.filter { it.value == 'E' }.keys.first()
 
         val stack = Stack<Step>()
         val solutions = mutableListOf<List<Point>>()
-        val memo = mutableMapOf<Step, List<List<Step>>>()
+        val memo = mutableMapOf<Point, List<List<Point>>>()
+        grid.forEach { (p, v) ->
+            if (v == '#') {
+                memo[p] = listOf(listOf())
+            }
+        }
+
 
         stack.push(Step(start, Direction.RIGHT))
 
@@ -94,6 +141,7 @@ class Day16 : Day {
             val curr = stack.pop()
             if (grid[curr.pos] == 'E') {
                 solutions.add(getPathFromEnd(curr))
+                memo[curr.prev!!.pos] = listOf(listOf(curr.pos))
                 continue
             }
 
@@ -104,21 +152,54 @@ class Day16 : Day {
             val rightDir = Direction.turnRight90(curr.dir)
             val right = curr.pos + rightDir.point
 
+            val stepStraight = Step(straight, curr.dir)
+            stepStraight.prev = curr
+            val stepLeft = Step(left, leftDir)
+            stepLeft.prev = curr
+            val stepRight = Step(right, rightDir)
+            stepRight.prev = curr
+
+//            if (
+//                memo.containsKey(straight) &&
+//                memo.containsKey(left) &&
+//                memo.containsKey(right)
+//            ) {
+//                val tailsStraight = memo[straight]
+//                val tailsLeft = memo[left]
+//                val tailsRight = memo[right]
+//                val newTailsStraight = updateTails(tailsStraight, curr)
+//                val newTailsLeft = updateTails(tailsLeft, curr)
+//                val newTailsRight = updateTails(tailsRight, curr)
+//                val newTails = mutableListOf<List<Point>>()
+//                newTails.addAll(newTailsStraight ?: listOf())
+//                newTails.addAll(newTailsLeft ?: listOf())
+//                newTails.addAll(newTailsRight ?: listOf())
+//                memo[curr.pos] = newTails
+//
+
+//
+//
+//
+//
+//
+//                val tails = memo[stepStraight]!!
+//                    val newTails = tails.map { tail ->
+//                        val sol = mutableListOf(curr)
+//                        sol.addAll(tail)
+//                        sol
+//                    }
+//                    memo[curr] = newTails
+//            } else {
             if (!used.contains(straight) && grid[straight] != '#') {
-                val step = Step(straight, curr.dir)
-                step.prev = curr
-                stack.push(step)
+                stack.push(stepStraight)
             }
             if (!used.contains(left) && grid[left] != '#') {
-                val step = Step(left, leftDir)
-                step.prev = curr
-                stack.push(step)
+                stack.push(stepLeft)
             }
             if (!used.contains(right) && grid[right] != '#') {
-                val step = Step(right, rightDir)
-                step.prev = curr
-                stack.push(step)
+                stack.push(stepRight)
             }
+//            }
         }
 
         val solutionsToScores = solutions.map { solution ->
@@ -127,6 +208,15 @@ class Day16 : Day {
         val lowestScore = solutionsToScores.minBy { it.second }.second
 
         return solutionsToScores.filter { it.second == lowestScore }.map { it.first }
+    }
+
+    private fun updateTails(
+        tailsStraight: List<List<Point>>?,
+        curr: Step
+    ) = tailsStraight?.map { tail ->
+        val sol = mutableListOf(curr.pos)
+        sol.addAll(tail)
+        sol
     }
 
     private fun computeSolutionScore(solution: List<Point>): Long {
@@ -158,6 +248,60 @@ class Day16 : Day {
         }
         return score
     }
+
+    private val findPathMemo = mutableMapOf<Point, List<List<Point>>?>()
+
+    private fun findPaths(grid: Map<Point, Char>, pos: Point, visited: Set<Point>): List<List<Point>>? {
+        if (findPathMemo.containsKey(pos)) {
+            return findPathMemo[pos]
+        }
+
+        if (grid[pos] == 'E') {
+            findPathMemo[pos] = listOf(listOf(pos))
+            return listOf(listOf(pos))
+        }
+        if (grid[pos] == '#') {
+            findPathMemo[pos] = null
+            return null
+        }
+
+        val neighborDirections = listOf(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT)
+        val neighbors = neighborDirections.map { pos + it.point }
+        val paths = neighbors
+            .filter { !visited.contains(it) }
+            .flatMap { findPaths(grid, it, visited + it) ?: listOf() }
+
+        findPathMemo[pos] = paths
+        return paths
+    }
+
+    val findPathMemo2 =
+        mutableMapOf<Pair<Point, Set<Point>>, List<List<Point>>?>()
+
+    private fun findPathsPoints(grid: Map<Point, Char>, pos: Point, visited: Set<Point>): List<List<Point>>? {
+        if (findPathMemo2.containsKey(Pair(pos, visited))) {
+            return findPathMemo[pos]
+        }
+
+        if (grid[pos] == 'E') {
+            findPathMemo[pos] = listOf(listOf(pos))
+            return listOf(listOf(pos))
+        }
+        if (grid[pos] == '#') {
+            findPathMemo[pos] = null
+            return null
+        }
+
+        val neighborDirections = listOf(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT)
+        val neighbors = neighborDirections.map { pos + it.point }
+        val paths = neighbors
+            .filter { !visited.contains(it) }
+            .flatMap { findPaths(grid, it, visited + it) ?: listOf() }
+
+        findPathMemo[pos] = paths
+        return paths
+    }
+
 
     private fun findSolutions(grid: Map<Point, Char>): List<FindState> {
         val start = grid.filter { it.value == 'S' }.keys.first()
@@ -205,14 +349,6 @@ class Day16 : Day {
         }
         return solutions.filter { it.score == bestScore }
     }
-
-    fun brokenComputePart1(grid: Map<Point, Char>): Long {
-        val pathFinder = PathFinder(grid)
-//        val memoizer = Memoizer(pathFinder.findPath)
-        return pathFinder.findPath(FindPathArgs(pathFinder.start, Direction.LEFT, 0))
-            ?: throw RuntimeException("no path found")
-    }
-
 }
 
 data class FindPathArgs(
