@@ -1,8 +1,13 @@
+import java.io.File
 import kotlin.math.pow
 
 class Day17 : Day {
     override fun part1(): Long {
-        TODO("Not yet implemented")
+        val c = Computer()
+        c.initialize(File("inputs/day17.txt").readLines())
+        c.run()
+        println(c.output.joinToString(","))
+        return -1
     }
 
     override fun part2(): Long {

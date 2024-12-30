@@ -12,6 +12,7 @@ import Day13
 import Day14
 import Day15
 import Day16
+import Day17
 
 fun main() {
 //    println("Day 1")
@@ -121,10 +122,17 @@ fun main() {
 //    println("Part 2, ${d15.part2ResultDescription()}: $d15r2")
 
 
-    println("Day 16")
-    val d16 = Day16()
+//    println("Day 16")
+//    val d16 = Day16()
 //    val d16r1 = d16.part1()
 //    println("Part 1, ${d16.part1ResultDescription()}: $d16r1")
-    val d16r2 = d16.part2()
-    println("Part 2, ${d16.part2ResultDescription()}: $d16r2")
+//    val d16r2 = d16.part2()
+//    println("Part 2, ${d16.part2ResultDescription()}: $d16r2")
+
+    println("Day 17")
+    val d17 = Day17()
+    val d17r1 = d17.part1()
+    println("Part 1, ${d17.part1ResultDescription()}: $d17r1")
+    val d17r2 = d17.part2()
+    println("Part 2, ${d17.part2ResultDescription()}: $d17r2")
 }
