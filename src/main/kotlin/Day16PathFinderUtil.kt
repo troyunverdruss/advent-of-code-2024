@@ -1,7 +1,7 @@
 import Utils.Direction
 import Utils.Point
 
-class PathFinderUtil(val grid: Map<Point, Char>) {
+class Day16PathFinderUtil(val grid: Map<Point, Char>) {
 
     private val neighborDirections = listOf(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT)
     private val memo = mutableMapOf<Set<Point>, List<Path>>()

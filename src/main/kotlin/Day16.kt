@@ -68,12 +68,26 @@ class Day16 : Day {
     }
 
     fun computePart2(grid: Map<Point, Char>): Long {
-        val start = grid.filter { it.value == 'S' }.keys.first()
-        val end = grid.filter { it.value == 'E' }.keys.first()
+        val bfsUtils = Day16BFSUtils(grid)
+        val solutions = bfsUtils.find()
+        val best = solutions.map { it.score }.min()
+        val uniquePoints = solutions.filter { it.score == best }.flatMap { Day16BFSUtils.getPathPoints(it) }.toSet()
+        return uniquePoints.size.toLong()
+
+
+
+//        val solutions = findSolutions(grid)
+//        val cheapestScore = solutions.minByOrNull { it.score }!!.score
+//        val cheapestSolutions = solutions.filter { it.score ==  cheapestScore}
+//        val uniquePoints = cheapestSolutions.flatMap { getPathFromEnd(it).map { it.pos } }.toSet()
+//        return uniquePoints.size.toLong()
+//
+//        val start = grid.filter { it.value == 'S' }.keys.first()
+//        val end = grid.filter { it.value == 'E' }.keys.first()
 //        val pathFinderUtil = PathFinderUtil(grid)
 //        val paths = pathFinderUtil.find(start, end, setOf(), listOf())
 
-        val dfsUtil = DFSUtil(grid)
+        val dfsUtil = Day16DFSUtil(grid)
         val paths = dfsUtil.findPaths()
 
         val pathsToScores = paths.map { path ->
@@ -222,35 +236,6 @@ class Day16 : Day {
         sol
     }
 
-    private fun computeSolutionScore(solution: List<Point>): Long {
-        var dir = Direction.RIGHT
-        var last = solution[0]
-        var score = 0L
-
-        solution.slice(1..solution.lastIndex).forEach { curr ->
-            when (curr) {
-                last + dir.point -> {
-                    score += 1
-                    last = curr
-                }
-
-                last + Direction.turnLeft90(dir).point -> {
-                    score += 1001
-                    last = curr
-                    dir = Direction.turnLeft90(dir)
-                }
-
-                last + Direction.turnRight90(dir).point -> {
-                    score += 1001
-                    last = curr
-                    dir = Direction.turnRight90(dir)
-                }
-
-                else -> throw RuntimeException("path problem!")
-            }
-        }
-        return score
-    }
 
     private val findPathMemo = mutableMapOf<Point, List<List<Point>>?>()
 
@@ -316,6 +301,8 @@ class Day16 : Day {
         val solutions = mutableListOf<FindState>()
         var bestScore = Long.MAX_VALUE
 
+        val bestScoreAtNode = mutableMapOf<Pair<Point, Direction>, Long>()
+
         while (toVisit.isNotEmpty()) {
             val curr = toVisit.removeFirst()
             visited.add(curr)
@@ -351,6 +338,39 @@ class Day16 : Day {
             }
         }
         return solutions.filter { it.score == bestScore }
+    }
+
+    companion object {
+
+        fun computeSolutionScore(path: List<Point>): Long {
+            var dir = Direction.RIGHT
+            var last = path[0]
+            var score = 0L
+
+            path.slice(1..path.lastIndex).forEach { curr ->
+                when (curr) {
+                    last + dir.point -> {
+                        score += 1
+                        last = curr
+                    }
+
+                    last + Direction.turnLeft90(dir).point -> {
+                        score += 1001
+                        last = curr
+                        dir = Direction.turnLeft90(dir)
+                    }
+
+                    last + Direction.turnRight90(dir).point -> {
+                        score += 1001
+                        last = curr
+                        dir = Direction.turnRight90(dir)
+                    }
+
+                    else -> throw RuntimeException("path problem!")
+                }
+            }
+            return score
+        }
     }
 }
 
@@ -393,6 +413,7 @@ class PathFinder(val grid: Map<Point, Char>) {
 
         return listOfNotNull(straight, left, right).minOrNull()
     }
+
 }
 
 class Memoizer<T, R>(val fn: (T) -> R) {
