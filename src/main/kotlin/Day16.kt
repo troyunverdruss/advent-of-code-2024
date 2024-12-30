@@ -70,8 +70,11 @@ class Day16 : Day {
     fun computePart2(grid: Map<Point, Char>): Long {
         val start = grid.filter { it.value == 'S' }.keys.first()
         val end = grid.filter { it.value == 'E' }.keys.first()
-        val pathFinderUtil = PathFinderUtil(grid)
-        val paths = pathFinderUtil.find(start, end, setOf(), listOf())
+//        val pathFinderUtil = PathFinderUtil(grid)
+//        val paths = pathFinderUtil.find(start, end, setOf(), listOf())
+
+        val dfsUtil = DFSUtil(grid)
+        val paths = dfsUtil.findPaths()
 
         val pathsToScores = paths.map { path ->
             path to computeSolutionScore(path.points)
