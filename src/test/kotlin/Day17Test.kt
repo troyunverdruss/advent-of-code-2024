@@ -62,38 +62,41 @@ class Day17Test {
 
     @Test
     fun `test getting outputs`() {
-        val nums = listOf(0,1,2,3,4,5,6,7)
-        val combos = nums.flatMap { a ->
-            nums.map { b ->
-                Pair(a,b)
-            }
-        }
-        combos.forEach { c ->
-            val ic = InputComputer()
-            val regA = 0 or c.first
-
-            ic.regA =
-            ic.run()
-            println("${ic.output}")
-        }
-
-        //        val zero = 0L
-        var regA = 0L
-//        regA = 512 // regA or 31
-//        regA = 1.shl(9) // regA or 31
-//        regA = regA.shl(3)
-//        regA = regA or 4
-//        regA = regA.shl(3)
-//        regA = regA or 0
-//        regA = regA.shl(3)
-//        regA = regA or 3
-//        regA = regA.shl(3)
-
-//        regA = regA.shl(3)
-//        regA = regA or 4
-//        regA = regA.shl(3)
+//        val nums = listOf(0,1,2,3,4,5,6,7)
+//        val combos = nums.flatMap { a ->
+//            nums.map { b ->
+//                Pair(a,b)
+//            }
+//        }
+//        combos.forEach { c ->
+//            val ic = InputComputer()
+//            var regA = 0 or c.first
+//            regA = regA.shl(3)
+//            regA = regA or c.second
+//
+//
+//            ic.regA = regA.toLong()
+//            ic.run()
+//            println("${ic.output}")
+//        }
+//
+//        //        val zero = 0L
+//        var regA = 0L
+////        regA = 512 // regA or 31
+////        regA = 1.shl(9) // regA or 31
+////        regA = regA.shl(3)
+////        regA = regA or 4
+////        regA = regA.shl(3)
+////        regA = regA or 0
+////        regA = regA.shl(3)
+////        regA = regA or 3
+////        regA = regA.shl(3)
+//
+////        regA = regA.shl(3)
+////        regA = regA or 4
+////        regA = regA.shl(3)
         val ic = InputComputer()
-        ic.regA = regA
+        ic.regA = 105843716614554
         ic.run()
         println("${ic.output}")
     }

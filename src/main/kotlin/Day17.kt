@@ -1,5 +1,7 @@
 import java.io.File
 import java.lang.ArithmeticException
+import java.util.LinkedList
+import kotlin.math.min
 import kotlin.math.pow
 
 class Day17 : Day {
@@ -11,10 +13,55 @@ class Day17 : Day {
         return -1
     }
 
+
     override fun part2(): Long {
         val c = Computer()
         c.initialize(File("inputs/day17.txt").readLines())
-        return c.runUntilOutputMatchesInstructions().toLong()
+
+        val target = c.instructions
+//            .subList((c.instructions.lastIndex - 6), c.instructions.size)
+
+        val solutions = mutableListOf<Long>()
+        var lowestSolution = Long.MAX_VALUE
+        val toVisit = LinkedList<Long>()
+        val toVisitSet = mutableSetOf<Long>()
+        val visited = mutableSetOf<Long>()
+        toVisit.addAll(listOf(0,1,2,3,4,5,6,7))
+        toVisitSet.addAll(listOf(0,1,2,3,4,5,6,7))
+        while (toVisit.isNotEmpty()) {
+            val curr = toVisit.pop()
+            toVisitSet.remove(curr)
+            visited.add(curr)
+            val ic = InputComputer()
+            ic.regA = curr
+            ic.run()
+            if (ic.output == target) {
+                solutions.add(curr)
+                lowestSolution = min(curr, lowestSolution)
+                toVisit.removeIf { it >= curr }
+                continue
+            }
+
+            val targetSubSlice = target.slice(
+                (target.size - ic.output.size)..target.lastIndex
+            )
+
+            if (targetSubSlice != ic.output) {
+                continue
+            }
+
+            (0L..7).forEach { v ->
+                var shiftedCurr = curr shl 3
+                shiftedCurr = shiftedCurr or v
+                if (!visited.contains(shiftedCurr) && !toVisitSet.contains(shiftedCurr) && shiftedCurr < lowestSolution) {
+                    toVisit.push(shiftedCurr)
+                    toVisitSet.add(shiftedCurr)
+                }
+
+            }
+        }
+return lowestSolution
+//        return c.runUntilOutputMatchesInstructions().toLong()
     }
 
     override fun part1ResultDescription() = "program output"
