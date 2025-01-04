@@ -6,21 +6,21 @@ class Day20 : Day {
     override fun part1(): Long {
         val grid = Utils.readGrid("inputs/day20.txt")
         val path = findThePath(grid)
-        val cheats = findCheats(path)
+        val cheats = findCheats(path, 2)
         return cheats.count { c -> c.savings >= 100L }.toLong()
     }
 
-    private fun findCheats(path: List<Point>): List<Cheat> {
-        val dirsPlus = Utils.cardinalDirections.map { dir ->
-            Point(dir.point.x * 2, dir.point.y * 2)
-        }
+    private fun findCheats(path: List<Point>, maxDistance: Long): List<Cheat> {
         val pathPointToIndex = path.mapIndexed { index, point -> point to index }.toMap()
+
         return path.mapIndexed { cheatStartIndex, cheatStart ->
-            dirsPlus.mapNotNull { dir ->
-                val cheatEnd = cheatStart + dir
-                val cheatEndIndex = pathPointToIndex[cheatEnd]
-                if (cheatEndIndex != null && cheatEndIndex > cheatStartIndex) {
-                    Cheat(cheatStart, cheatEnd, savings = cheatEndIndex - cheatStartIndex - 2)
+            path.slice((cheatStartIndex + maxDistance.toInt())..path.lastIndex).mapNotNull { cheatEnd ->
+                val currDistance = Utils.distance(cheatStart, cheatEnd)
+                val cheatEndIndex =
+                    pathPointToIndex[cheatEnd] ?: throw RuntimeException("couldn't find index for point")
+                val savings = cheatEndIndex - cheatStartIndex - currDistance.toInt()
+                if (currDistance <= maxDistance && savings > currDistance) {
+                    Cheat(cheatStart, cheatEnd, savings)
                 } else {
                     null
                 }
@@ -76,12 +76,13 @@ class Day20 : Day {
     }
 
     override fun part2(): Long {
-        TODO("Not yet implemented")
+        val grid = Utils.readGrid("inputs/day20.txt")
+        val path = findThePath(grid)
+        val cheats = findCheats(path, 20)
+        return cheats.count { c -> c.savings >= 100L }.toLong()
     }
 
-    override fun part1ResultDescription() = "Number of cheats that save 100+ picoseconds"
+    override fun part1ResultDescription() = "Number of cheats that save 100+ picoseconds (with <=2 cheat)"
 
-    override fun part2ResultDescription(): String {
-        TODO("Not yet implemented")
-    }
+    override fun part2ResultDescription() = "Number of cheats that save 100+ picoseconds (with <=20 cheat)"
 }

@@ -1,8 +1,13 @@
 import java.io.File
+import kotlin.math.abs
 
 object Utils {
 
     val cardinalDirections = listOf(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT)
+
+    fun distance(a: Point, b: Point): Long {
+        return abs(b.x - a.x) + abs(b.y - a.y)
+    }
 
     data class Point(val x: Long, val y: Long) {
         operator fun plus(p: Point): Point {
