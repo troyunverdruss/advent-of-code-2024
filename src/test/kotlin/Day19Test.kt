@@ -16,9 +16,16 @@ class Day19Test {
     """.trimIndent()
 
     @Test
-    fun    `part 1 example`() {
+    fun `part 1 example`() {
         val d = Day19()
         val input = d.parseLines(input.split("\n\n"))
         assertEquals(d.computePart1(input), 6)
+    }
+
+    @Test
+    fun `part 2 example`() {
+        val d = Day19()
+        val input = d.parseLines(input.split("\n\n"))
+        assertEquals(d.computePart2(input), 16)
     }
 }
