@@ -13,30 +13,39 @@ object Utils {
         operator fun plus(p: Point): Point {
             return Point(this.x + p.x, this.y + p.y)
         }
+
         operator fun minus(p: Point): Point {
             return Point(this.x - p.x, this.y - p.y)
         }
+
         fun up(): Point {
             return this + Direction.UP.point
         }
+
         fun down(): Point {
             return this + Direction.DOWN.point
         }
+
         fun left(): Point {
             return this + Direction.LEFT.point
         }
+
         fun right(): Point {
             return this + Direction.RIGHT.point
         }
+
         fun upLeft(): Point {
             return this + Direction.UP_LEFT.point
         }
+
         fun upRight(): Point {
             return this + Direction.UP_RIGHT.point
         }
+
         fun downLeft(): Point {
             return this + Direction.DOWN_LEFT.point
         }
+
         fun downRight(): Point {
             return this + Direction.DOWN_RIGHT.point
         }
@@ -64,6 +73,7 @@ object Utils {
                     else -> throw RuntimeException("Unknown direction $direction")
                 }
             }
+
             fun turnLeft90(direction: Direction): Direction {
                 return when (direction) {
                     UP -> LEFT
@@ -73,9 +83,29 @@ object Utils {
                     else -> throw RuntimeException("Unknown direction $direction")
                 }
             }
+
+            fun computeDirection(start: Point, end: Point): Direction {
+                val delta = end - start
+                when (delta) {
+                    UP.point -> return UP
+                    DOWN.point -> return DOWN
+                    LEFT.point -> return LEFT
+                    RIGHT.point -> return RIGHT
+                    else -> throw RuntimeException("Unknown direction from delta: $delta")
+                }
+            }
+
+            fun dirToChar(dir: Direction): Char {
+                return when (dir) {
+                    UP -> '^'
+                    DOWN -> 'v'
+                    LEFT -> '<'
+                    RIGHT -> '>'
+                    else -> throw RuntimeException("Invalid Direction")
+                }
+            }
         }
     }
-
 
 
     fun readGrid(filePath: String): Map<Point, Char> {
@@ -90,7 +120,7 @@ object Utils {
                 }
             }.toMap()
     }
-    
+
     fun debugPrint(grid: Map<Utils.Point, Char>) {
         val minX = grid.keys.minBy { it.x }.x
         val minY = grid.keys.minBy { it.y }.y
