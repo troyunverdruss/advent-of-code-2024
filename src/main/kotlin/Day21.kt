@@ -4,176 +4,188 @@ import java.io.File
 
 class Day21 : Day {
     override fun part1(): Long {
-        val codes = File("inputs/Day21.txt").readLines().filter { it.isNotBlank() }
-        codes.map { code ->
-            computePart1(code)
-        }
-        TODO()
+        val inputCodes = File("inputs/day21.txt").readLines()
+        return computePart1(inputCodes)
     }
 
-    fun computePart1(code: String): Long {
-        val robotKeyPad = KeyPad()
-        val codeArray = code.map { it.toChar() }
-        val robotKeyPadFullPath = robotKeyPad.fullPath(listOf(codeArray))
-        println(robotKeyPadFullPath)
+    data class ResultPart1(val shortestLength: Long, val numericComponent: Long) {
+        fun complexity(): Long {
+            return shortestLength * numericComponent
+        }
+    }
 
-        val robotArrowPad1 = ArrowPad()
-        val robotArrowPadFullPath1 = robotArrowPad1.fullPath(robotKeyPadFullPath)
-        println(robotArrowPadFullPath1)
+    fun computePart1(inputCodes: List<String>): Long {
+        return inputCodes.map { computeResultPart1(it) }.sumOf { it.complexity() }
+    }
 
-        val robotArrowPad2 = ArrowPad()
-        val robotArrowPadFullPath2 = robotArrowPad2.fullPath(robotArrowPadFullPath1)
+    fun computeResultPart1(inputCode: String): ResultPart1 {
+        val shortestPaths = inputCodeToPairs(inputCode).map { startEndPair ->
+            val paths =
+                filterForShortestPaths(findPaths(startEndPair.first, startEndPair.second, keypadGrid)).map { it + 'A' }
+            val arrowPaths1 = filterForShortestPaths(paths.flatMap { inputCodeToPaths(it, arrowpadGrid) })
+            val arrowPaths2 = filterForShortestPaths(arrowPaths1.flatMap { inputCodeToPaths(it, arrowpadGrid) })
 
-        val myArrowPad = ArrowPad()
-        val myArrowPadFullPath = myArrowPad.fullPath(robotArrowPadFullPath2)
+            arrowPaths2
+        }
+        val shortestLengthPerPath = shortestPaths
+            .map { filterForShortestPaths(it) }
+            .sumOf { it.first().length }.toLong()
 
-        val lengthOfSequence = myArrowPadFullPath.size.toLong()
-        TODO("need to get numeric val from code and mul()")
+        return ResultPart1(
+            shortestLengthPerPath,
+            inputCode.replace("A", "").toLong()
+        )
+    }
+
+    fun inputCodeToPaths(inputCode: String, grid: Map<Point, Char>): List<String> {
+        val paths = inputCodeToPairs(inputCode).map { startEndPair ->
+            val x = findPaths(startEndPair.first, startEndPair.second, grid)
+            println(x)
+            x
+        }
+
+        val cpaths = cartesianProduct(paths)
+        return filterForShortestPaths(cpaths)
+    }
+
+    fun inputCodeToPairs(inputCode: String): List<Pair<Char, Char>> {
+        return inputCode.indices.map { i ->
+            if (i == 0) {
+                Pair('A', inputCode[i])
+            } else {
+                Pair(inputCode[i - 1], inputCode[i])
+            }
+        }
+    }
+
+    fun filterForShortestPaths(paths: List<String>): List<String> {
+        val shortestLength = paths.minByOrNull { it.length }?.length ?: 0
+        return paths.filter { it.length == shortestLength }
+    }
+
+    fun allPaths(paths: List<List<String>>): List<String> {
+        if (paths.size == 1) {
+            return paths[0].map { it + 'A' }
+        }
+
+        val firstPath = paths.first()
+        val fullOptions = mutableListOf<String>()
+        for (option in firstPath) {
+            allPaths(paths.slice(1..paths.lastIndex)).forEach { subPath ->
+                fullOptions.add(option + 'A' + subPath)
+            }
+        }
+
+        return fullOptions
+    }
+
+    fun cartesianProduct(lists: List<List<String>>): List<String> {
+        // Start with an empty list containing an empty string (acts as a base case for the iteration)
+        var result = listOf("")
+
+        // Iterate through each list in the input
+        for (list in lists) {
+            val tempResult = mutableListOf<String>()
+
+            // For each string in the current result, combine it with each string in the current list
+            for (prefix in result) {
+                for (suffix in list) {
+                    tempResult.add(prefix + suffix + 'A')
+                }
+            }
+
+            // Update result for the next iteration
+            result = tempResult
+        }
+
+        return result
+    }
+
+
+    data class SearchStep(val pos: Point) {
+        var visited = setOf<Point>()
+        var dirsUsed = setOf<Direction>()
+        var prev: SearchStep? = null
+        var direction: Direction? = null
+    }
+
+    fun findPaths(startKey: Char, endKey: Char, keypad: Map<Point, Char>): List<String> {
+        val start = keypad.filter { it.value == startKey }.keys.first()
+        val end = keypad.filter { it.value == endKey }.keys.first()
+
+
+        val startStep = SearchStep(start)
+        startStep.visited = setOf(start)
+        val toVisit = mutableListOf<SearchStep>()
+        val toVisitSet = mutableSetOf<SearchStep>()
+        toVisit.add(startStep)
+        toVisitSet.add(startStep)
+
+        val paths = mutableListOf<String>()
+
+        while (toVisit.isNotEmpty()) {
+            val curr = toVisit.removeFirst()
+            toVisitSet.remove(curr)
+
+            if (curr.pos == end) {
+                val thisPath = mutableListOf<Char>()
+                var currStep: SearchStep? = curr
+                while (currStep != null) {
+                    if (currStep.prev?.pos != null) {
+                        val calculatedDir = Direction.computeDirection(currStep.prev?.pos!!, currStep.pos)
+                        thisPath.add(0, Direction.dirToChar(calculatedDir))
+                    }
+                    currStep = currStep.prev
+                }
+                paths.add(thisPath.joinToString(""))
+            }
+
+            Utils.cardinalDirections.forEach { direction ->
+                val nextStep = SearchStep(curr.pos + direction.point)
+                nextStep.prev = curr
+                nextStep.direction = direction
+                nextStep.dirsUsed = curr.dirsUsed + direction
+                nextStep.visited = curr.visited + nextStep.pos
+
+                if (
+                    keypad[nextStep.pos] != null &&
+                    !toVisitSet.contains(nextStep) &&
+                    !curr.visited.contains(nextStep.pos)
+                    && (!curr.dirsUsed.contains(direction) || curr.direction == direction)
+                ) {
+                    toVisit.add(nextStep)
+                }
+            }
+        }
+
+        return paths
     }
 
     override fun part2(): Long {
         TODO("Not yet implemented")
     }
 
-    override fun part1ResultDescription(): String {
-        TODO("Not yet implemented")
-    }
+    override fun part1ResultDescription() = "Sum of complexities"
 
     override fun part2ResultDescription(): String {
         TODO("Not yet implemented")
     }
 
-    class KeyPad : Pad(lines) {
-        private var currPos = Point(2, 3)
-
-        override fun pathToNext(next: Char): List<Direction> {
-            val end = grid.filter { it.value == next }.keys.first()
-
-            if (currPos == end) {
-                return listOf()
-            }
-
-            if (memo.contains(Pair(currPos, end))) {
-                return memo[Pair(currPos, end)]!!
-            }
-            val pathDetails = findPath(currPos, end)
-            memo[Pair(currPos, end)] = pathDetails.path
-            currPos = pathDetails.lastPos
-            return pathDetails.path
-        }
-    }
-
     companion object {
-        private val lines = """
+        val keypad = """
                 789
                 456
                 123
                 #0A
             """.trimIndent().lines()
-        private val memo = mutableMapOf<Pair<Point, Point>, List<Direction>>()
-    }
-}
-
-class ArrowPad : Pad(lines) {
-    private var currPos = Point(2, 0)
-
-    override fun pathToNext(next: Char): List<Direction> {
-        val end = grid.filter { it.value == next }.keys.first()
-
-        if (currPos == end) {
-            return listOf()
-        }
-
-        if (memo.contains(Pair(currPos, end))) {
-            return memo[Pair(currPos, end)]!!
-        }
-        val pathDetails = findPath(currPos, end)
-        memo[Pair(currPos, end)] = pathDetails.path
-        currPos = pathDetails.lastPos
-        return pathDetails.path
-    }
-
-    companion object {
-        private val lines = """
+        val arrowpad = """
                 #^A
                 <v>
             """.trimIndent().lines()
-        private val memo = mutableMapOf<Pair<Point, Point>, List<Direction>>()
+
+        val keypadGrid = Utils.parseGrid(keypad).filter { it.value != '#' }
+        val arrowpadGrid = Utils.parseGrid(arrowpad).filter { it.value != '#' }
+
     }
+
 }
-
-
-abstract class Pad(lines: List<String>) {
-    val grid = Utils.parseGrid(lines).filter { it.value != '#' }
-
-    data class Step(val pos: Point) {
-        var prev: Step? = null
-    }
-
-    data class PathDetails(val path: List<Direction>, val lastPos: Point)
-
-    abstract fun pathToNext(next: Char): List<Direction>
-
-    fun findPath(start: Point, end: Point): PathDetails {
-        if (start == end) {
-            return PathDetails(listOf(), start)
-        }
-
-        val toVisit = mutableListOf<Step>()
-        val visited = mutableSetOf<Step>()
-        toVisit.add(Step(start))
-        while (toVisit.isNotEmpty()) {
-            val curr = toVisit.removeFirst()
-            if (curr.pos == end) {
-                val path = mutableListOf<Direction>()
-                var tmp: Step? = curr
-                while (tmp != null) {
-                    if (tmp.prev?.pos != null) {
-                        val dir = Direction.computeDirection(tmp.prev?.pos!!, tmp.pos)
-                        path.add(0, dir)
-                    }
-                    tmp = tmp.prev
-                }
-                return PathDetails(path.sorted(), curr.pos)
-            }
-
-            Utils.cardinalDirections.forEach { dir ->
-                val nextStep = Step(curr.pos + dir.point)
-                nextStep.prev = curr
-                if (grid[nextStep.pos] != null && !toVisit.contains(nextStep) && !visited.contains(nextStep)) {
-                    toVisit.add(nextStep)
-                }
-            }
-        }
-        throw RuntimeException("no path found")
-    }
-
-    fun fullPath(code: List<List<Char>>): List<List<Char>> {
-        println("-----")
-        val path = mutableListOf<List<Char>>()
-        code.forEach { macroStep ->
-            macroStep.forEach { c ->
-                val chars = mutableListOf<Char>()
-                val pathToNext = pathToNext(c)
-                for (dir in pathToNext) {
-                    println("$dir to $c")
-                    chars.add(Direction.dirToChar(dir))
-                }
-                chars.add('A')
-                path.add(chars)
-            }
-        }
-//        return code.map { c ->
-//            val chars = mutableListOf<Char>()
-//            val pathToNext = pathToNext(c)
-//            for (dir in pathToNext) {
-//                println("$dir to $c")
-//                chars.add(Direction.dirToChar(dir))
-//            }
-//            chars.add('A')
-//            chars
-//        }
-        return path
-    }
-}
-
