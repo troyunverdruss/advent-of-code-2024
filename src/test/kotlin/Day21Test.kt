@@ -25,9 +25,23 @@ class Day21Test {
     }
 
     @Test
+    fun `part 2, test example part 1, 029A`() {
+        val d = Day21()
+        val res = d.computeResultPart2("029A")
+        assertEquals(res.complexity(), 68*29)
+    }
+
+    @Test
     fun `test example part 1, 980A`() {
         val d = Day21()
         val res = d.computeResultPart1("980A")
+        assertEquals(res.complexity(), 60 * 980)
+    }
+
+    @Test
+    fun `part 2, test example part 1, 980A`() {
+        val d = Day21()
+        val res = d.computeResultPart2("980A")
         assertEquals(res.complexity(), 60 * 980)
     }
 
@@ -39,9 +53,23 @@ class Day21Test {
     }
 
     @Test
+    fun `part 2, test example part 1, 179A`() {
+        val d = Day21()
+        val res = d.computeResultPart2("179A")
+        assertEquals(res.complexity(), 68 * 179)
+    }
+
+    @Test
     fun `test example part 1, 456A`() {
         val d = Day21()
         val res = d.computeResultPart1("456A")
+        assertEquals(res.complexity(), 64 * 456)
+    }
+
+    @Test
+    fun `part 2, test example part 1, 456A`() {
+        val d = Day21()
+        val res = d.computeResultPart2("456A")
         assertEquals(res.complexity(), 64 * 456)
     }
 

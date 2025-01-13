@@ -52,15 +52,12 @@ class Day21 : Day {
             val testing3 = filterForShortestPaths(testing2).first().length
             val x = 9
 
-            shortestPaths
+            testing3
         }
 
-        val shortestLengthPerPath = shortestPaths
-            .map { filterForShortestPaths(it) }
-            .sumOf { it.first().length }.toLong()
 
         return ResultPart1(
-            shortestLengthPerPath,
+            shortestPaths.sum().toLong(),
             inputCode.replace("A", "").toLong()
         )
     }
