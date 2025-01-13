@@ -37,17 +37,12 @@ class Day21 : Day {
         )
     }
 
-    fun computeResultPart2(inputCode: String): ResultPart1 {
+    fun computeResultPart2(inputCode: String, depth: Int = 2): ResultPart1 {
         val shortestPaths = inputCodeToPairs(inputCode).map { startEndPair ->
             val paths =
                 filterForShortestPaths(findPaths(startEndPair.first, startEndPair.second, keypadGrid)).map { it + 'A' }
-//
-//            val arrowPaths1 = filterForShortestPaths(paths.flatMap { inputCodeToPaths(it, arrowpadGrid) })
-//            val arrowPaths2 = filterForShortestPaths(arrowPaths1.flatMap { inputCodeToPaths(it, arrowpadGrid) })
-//            val shortestPaths = filterForShortestPaths(arrowPaths2)
-//            val shortestLength = shortestPaths.first().length
 
-            paths.map { path -> getShortestPath(path, 2) }.min()
+            paths.map { path -> getShortestPath(path, depth) }.min()
         }
 
 
@@ -57,8 +52,17 @@ class Day21 : Day {
         )
     }
 
+    val memo = mutableMapOf<Pair<String, Int>, Long>()
+
     fun getShortestPath(path: String, depth: Int): Long {
+        val key = Pair(path, depth)
+        val memoVal = memo[key]
+        if (memoVal != null) {
+            return memoVal
+        }
+
         if (depth == 0) {
+            memo[key] = path.length.toLong()
             return path.length.toLong()
         }
 
@@ -73,6 +77,7 @@ class Day21 : Day {
         }
 
         val y = x.sumOf { it.min() }
+        memo[key] = y
         return y
     }
 
@@ -224,14 +229,13 @@ class Day21 : Day {
     }
 
     override fun part2(): Long {
-        TODO("Not yet implemented")
+        val inputCodes = File("inputs/day21.txt").readLines()
+        return inputCodes.map { computeResultPart2(it, depth = 25) }.sumOf { it.complexity() }
     }
 
-    override fun part1ResultDescription() = "Sum of complexities"
+    override fun part1ResultDescription() = "Sum of complexities (2 robots)"
 
-    override fun part2ResultDescription(): String {
-        TODO("Not yet implemented")
-    }
+    override fun part2ResultDescription() = "Sum of complexities (25 robots)"
 
     companion object {
         val keypad = """
