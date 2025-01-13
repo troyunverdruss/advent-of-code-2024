@@ -41,45 +41,39 @@ class Day21 : Day {
         val shortestPaths = inputCodeToPairs(inputCode).map { startEndPair ->
             val paths =
                 filterForShortestPaths(findPaths(startEndPair.first, startEndPair.second, keypadGrid)).map { it + 'A' }
+//
+//            val arrowPaths1 = filterForShortestPaths(paths.flatMap { inputCodeToPaths(it, arrowpadGrid) })
+//            val arrowPaths2 = filterForShortestPaths(arrowPaths1.flatMap { inputCodeToPaths(it, arrowpadGrid) })
+//            val shortestPaths = filterForShortestPaths(arrowPaths2)
+//            val shortestLength = shortestPaths.first().length
 
-            val arrowPaths1 = filterForShortestPaths(paths.flatMap { inputCodeToPaths(it, arrowpadGrid) })
-            val arrowPaths2 = filterForShortestPaths(arrowPaths1.flatMap { inputCodeToPaths(it, arrowpadGrid) })
-            val shortestPaths = filterForShortestPaths(arrowPaths2)
-            val shortestLength = shortestPaths.first().length
-
-            val testing1 = paths.flatMap { path -> getShortestPath(path, 1) }
-            val testing2 = paths.flatMap { path -> getShortestPath(path, 2) }
-            val testing3 = filterForShortestPaths(testing2).first().length
-            val x = 9
-
-            testing3
+            paths.map { path -> getShortestPath(path, 2) }.min()
         }
 
 
         return ResultPart1(
-            shortestPaths.sum().toLong(),
+            shortestPaths.sum(),
             inputCode.replace("A", "").toLong()
         )
     }
 
-    fun getShortestPath(path: String, depth: Int): List<String> {
+    fun getShortestPath(path: String, depth: Int): Long {
         if (depth == 0) {
-            return listOf(path)
+            return path.length.toLong()
         }
-
 
         val pathParts = path.split('A').slice(0..<path.count { it == 'A' }).map { it + 'A' }
 
-
         val x = pathParts.map { pathPart ->
             val possiblePaths = inputCodeToPaths(pathPart, arrowpadGrid)
-            possiblePaths.flatMap { poss ->
+            possiblePaths.map { poss ->
                 val solutionPaths = getShortestPath(poss, depth - 1)
                 solutionPaths
             }
         }
 
-        return cartesianProductNoAddedA(x)
+        val y = x.sumOf { it.min() }
+        return y
     }
 
 
@@ -147,13 +141,13 @@ class Day21 : Day {
         return result
     }
 
-    fun cartesianProductNoAddedA(lists: List<List<String>>): List<String> {
+    fun cartesianProductNoAddedA(lists: List<List<Long>>): List<Long> {
         // Start with an empty list containing an empty string (acts as a base case for the iteration)
-        var result = listOf("")
+        var result = mutableListOf<Long>(0)
 
         // Iterate through each list in the input
         for (list in lists) {
-            val tempResult = mutableListOf<String>()
+            val tempResult = mutableListOf<Long>()
 
             // For each string in the current result, combine it with each string in the current list
             for (prefix in result) {
