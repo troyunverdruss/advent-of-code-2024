@@ -37,6 +37,55 @@ class Day21 : Day {
         )
     }
 
+    fun computeResultPart2(inputCode: String): ResultPart1 {
+        val shortestPaths = inputCodeToPairs(inputCode).map { startEndPair ->
+            val paths =
+                filterForShortestPaths(findPaths(startEndPair.first, startEndPair.second, keypadGrid)).map { it + 'A' }
+
+            val arrowPaths1 = filterForShortestPaths(paths.flatMap { inputCodeToPaths(it, arrowpadGrid) })
+            val arrowPaths2 = filterForShortestPaths(arrowPaths1.flatMap { inputCodeToPaths(it, arrowpadGrid) })
+            val shortestPaths = filterForShortestPaths(arrowPaths2)
+            val shortestLength = shortestPaths.first().length
+
+            val testing1 = paths.flatMap { path -> getShortestPath(path, 1) }
+            val testing2 = paths.flatMap { path -> getShortestPath(path, 2) }
+            val testing3 = filterForShortestPaths(testing2).first().length
+            val x = 9
+
+            shortestPaths
+        }
+
+        val shortestLengthPerPath = shortestPaths
+            .map { filterForShortestPaths(it) }
+            .sumOf { it.first().length }.toLong()
+
+        return ResultPart1(
+            shortestLengthPerPath,
+            inputCode.replace("A", "").toLong()
+        )
+    }
+
+    fun getShortestPath(path: String, depth: Int): List<String> {
+        if (depth == 0) {
+            return listOf(path)
+        }
+
+
+        val pathParts = path.split('A').slice(0..<path.count { it == 'A' }).map { it + 'A' }
+
+
+        val x = pathParts.map { pathPart ->
+            val possiblePaths = inputCodeToPaths(pathPart, arrowpadGrid)
+            possiblePaths.flatMap { poss ->
+                val solutionPaths = getShortestPath(poss, depth - 1)
+                solutionPaths
+            }
+        }
+
+        return cartesianProductNoAddedA(x)
+    }
+
+
     fun inputCodeToPaths(inputCode: String, grid: Map<Point, Char>): List<String> {
         val paths = inputCodeToPairs(inputCode).map { startEndPair ->
             val x = findPaths(startEndPair.first, startEndPair.second, grid)
@@ -91,6 +140,28 @@ class Day21 : Day {
             for (prefix in result) {
                 for (suffix in list) {
                     tempResult.add(prefix + suffix + 'A')
+                }
+            }
+
+            // Update result for the next iteration
+            result = tempResult
+        }
+
+        return result
+    }
+
+    fun cartesianProductNoAddedA(lists: List<List<String>>): List<String> {
+        // Start with an empty list containing an empty string (acts as a base case for the iteration)
+        var result = listOf("")
+
+        // Iterate through each list in the input
+        for (list in lists) {
+            val tempResult = mutableListOf<String>()
+
+            // For each string in the current result, combine it with each string in the current list
+            for (prefix in result) {
+                for (suffix in list) {
+                    tempResult.add(prefix + suffix)
                 }
             }
 

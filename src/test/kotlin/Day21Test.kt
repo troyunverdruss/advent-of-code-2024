@@ -53,6 +53,13 @@ class Day21Test {
     }
 
     @Test
+    fun `part 2, test example part 1, 379A`() {
+        val d = Day21()
+        val res = d.computeResultPart2("379A")
+        assertEquals(64 * 379, res.complexity())
+    }
+
+    @Test
     fun `compare cartesian products`() {
         val d = Day21()
         val input = listOf(listOf("a"), listOf("b1", "b2"), listOf("c"))
