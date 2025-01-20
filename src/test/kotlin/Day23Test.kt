@@ -40,6 +40,22 @@ class Day23Test {
      fun `part 1 example`() {
         val d = Day23()
         val networks = d.findNetworks(edges)
+//        d.groupByNumberOfCommonNodes(networks, edges)
+        val edgeSets = edges.map { it.computers() }
+        d.computePart2(edgeSets)
+
+
+        val threeNetworks = edges.flatMap { edge ->
+            d.growNetworkByOne(edge.computers(), edgeSets)
+        }.toSet()
+
+        val fourNetworks = threeNetworks.flatMap { threeNetwork ->
+            d.growNetworkByOne(threeNetwork, edgeSets)
+        }.toSet()
+
+
         val x = 0
      }
+
+
  }
